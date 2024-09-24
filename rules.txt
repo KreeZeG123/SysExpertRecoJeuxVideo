@@ -1,0 +1,86 @@
+# Personalité -> Caractéristique
+
+## 1 attr
+Humeur(fatigue) -> Difficulte(facile)
+Humeur(enerve) -> Genre(combat)
+Trait(intelligent) -> Type(rts)
+Position(assis) -> Plateforme(pc)
+Trait(reveur) -> Genre(fantasy)
+Groupe(oui) -> ModeJeu(multijoueur)
+Horaire(soir) -> Type(hack_n_slash)
+Trait(competitif) -> Difficulte(difficile)
+Trait(sportif) -> Type(sport)
+Position(allonge) -> Plateforme(mobile)
+Trait(explorateur) -> Genre(exploration)
+Horaire(nuit) -> ModeJeu(solo)
+Humeur(en_forme) -> Type(fps)
+
+## 2 attr
+Humeur(heureux), Trait(calme) -> Difficulte(moyen)
+Trait(perseverant), Groupe(oui) -> ModeJeu(cooperatif)
+Trait(sportif), Humeur(en_forme) -> Genre(action)
+Humeur(fatigue), Position(allonge) -> Plateforme(mobile)
+Trait(competitif), Groupe(oui) -> ModeJeu(competitif)
+Position(assis), Humeur(en_forme) -> Type(fps)
+Trait(calme), Groupe(non) -> ModeJeu(solo)
+Humeur(fatigue), Horaire(soir) -> Type(simulation_vie)
+Trait(sportif), Groupe(oui) -> Type(sport)
+Trait(perseverant), Humeur(heureux) -> Genre(puzzle)
+Groupe(non), Horaire(nuit) -> ModeJeu(solo)
+Trait(competitif), Horaire(apres_midi) -> Type(moba)
+
+
+Position(assis),Horaire(nuit) -> Humeur(fatigue)
+
+Joueur(>1) -> ModeJeu(multijoueur)
+Joueur(1),Humeur(fatigue) -> ModeJeu(solo), Genre(Histoire)
+Joueur(1),Trait(perseverant) -> ModeJeu(solo), Difficulte(difficile)
+
+ModeJeu(multijoueur),EtatJoueur(en_ligne) -> ModeJeu(cooperatif)
+ModeJeu(multijoueur),EtatJoueur(sur_place) -> ModeJeu(local)
+
+Age(<12) -> Difficulte(Facile)
+Age(>18),Trait(perseverant) -> Difficulte(difficile)
+
+Difficulte(difficile) -> Type(moba)
+
+Trait(creatif),Trait(calme) -> Type(plateforme)
+
+Horaire(apres_midi) -> Humeur(en_forme)
+Horaire(nuit) -> Humeur(fatigue)
+
+Humeur(en_forme) -> Genre(action)
+Humeur(enerve) -> Genre(fantaisie)
+
+
+
+
+
+
+
+
+
+
+
+Type(rpg),Genre(action),Genre(aventure),Genre(puzzle),Age(12),Plateforme(console_portable),Difficulte(moyen)ModeJeu(solo),Prix(50) -> Jeu(the_legend_of_zelda_breath_of_the_wild)
+Type(rpg),Genre(action),Genre(histoire),Age(18),Plateforme(console_salon),Difficulte(facile),ModeJeu(solo),ModeJeu(multijoueur),Prix(20) -> Jeu(grand_theft_auto_v)
+Type(rpg),Genre(action),Genre(aventure),Genre(histoire),Age(18),Plateforme(pc),Plateforme(console_salon),Difficulte(facile),ModeJeu(solo),Prix(60) -> Jeu(red_dead_redemption_2)
+Type(rpg),Genre(action),Genre(fantasy),Genre(histoire),Genre(exploration),Age(18),Plateforme(pc),Plateforme(console_salon),Difficulte(moyen),ModeJeu(solo),Prix(30) -> Jeu(the_witcher_3_wild_hunt)
+Type(bac_a_sable),Genre(aventure),Genre(exploration),Genre(construction),Genre(survie),Age(7),Plateforme(console_salon),Plateforme(console_portable),Plateforme(pc),Plateforme(mobile),Difficulte(facile),ModeJeu(solo),ModeJeu(multijoueur),Prix(25) -> Jeu(minecraft)
+Type(tps),Genre(action),Genre(combat),Genre(survie),Age(7),Plateforme(pc),Plateforme(console_salon),Plateforme(mobile),Plateforme(console_portable),Difficulte(moyen),ModeJeu(multijoueur),ModeJeu(cooperatif),Prix(0) -> Jeu(fortnite)
+Type(fps),Genre(action),Genre(combat),Genre(histoire),Age(18),Plateforme(console_salon),Plateforme(pc),Difficulte(difficile),ModeJeu(multijoueur),ModeJeu(solo),Prix(30) -> Jeu(call_of_duty_modern_warfare)
+Type(rpg),Genre(action),Genre(science_fiction),Genre(cyberpunk),Age(18),Plateforme(pc),Plateforme(console_salon),Difficulte(moyen),ModeJeu(solo),Prix(30) -> Jeu(cyberpunk_2077)
+Type(fps),Genre(action),Genre(science_fiction),Genre(strategie),Genre(combat),Age(12),Plateforme(console_salon),Plateforme(pc),ModeJeu(multijoueur),Prix(20) -> Jeu(overwatch)
+Type(rpg),Genre(action),Genre(aventure),Genre(histoire),Age(18),Plateforme(console_salon),Plateforme(pc),Difficulte(difficile),ModeJeu(solo),Prix(20) -> Jeu(assassin_s_creed_valhalla)
+Type(rpg),Genre(action),Genre(aventure),Genre(combat),Age(18),Plateforme(console_salon),Plateforme(pc),Difficulte(extreme),ModeJeu(solo),Prix(60) -> Jeu(god_of_war_ragnarok)
+Type(rpg),Genre(action),Genre(aventure),Genre(exploration),Age(16),Plateforme(console_salon),Difficulte(moyen),ModeJeu(solo),Prix(50) -> Jeu(horizon_zero_dawn)
+Type(rpg),Genre(action),Genre(aventure),Genre(fantasy),Genre(combat),Age(18),Plateforme(pc),Plateforme(console_salon),Difficulte(extreme),ModeJeu(solo),Prix(40) -> Jeu(dark_ souls_III)
+Type(moba),Genre(action),Genre(fantasy),Genre(strategie),Genre(combat)Age(7),Plateforme(pc),Difficulte(difficile),ModeJeu(multijoueur),ModeJeu(competitif),Prix(0) -> Jeu(league_of_ legends)
+Type(plateforme),Genre(aventure),Genre(fantasy),Age(3),Plateforme(console_portable),Difficulte(facile),ModeJeu(solo),ModeJeu(cooperatif),Prix(30) -> Jeu(super_mario_odyssey)
+Type(simulation_vie),Genre(construction),Genre(fantasy),Age(3),Plateforme(console_portable),Difficulte(facile),ModeJeu(solo),Prix(20) -> Jeu(animal_crossing_new_horizons)
+Type(fps),Genre(action),Genre(survie),Genre(combat),Age(12),Plateforme(console_salon),Plateforme(pc),Difficulte(moyen),ModeJeu(multijoueur),ModeJeu(competitif),Prix(0) -> Jeu(apex_legends)
+Type(sport),Genre(simulation),Age(3),Plateforme(console_salon),Plateforme(pc),Difficulte(moyen),ModeJeu(multijoueur),Prix(70) -> Jeu(fifa_25)
+Type(rpg),Genre(action),Genre(fantasy),Genre(aventure),Genre(combat),Age(18),Plateforme(console_salon),Plateforme(pc),Difficulte(extreme),ModeJeu(solo),Prix(50) -> Jeu(elden_ring)
+Type(rpg),Genre(horreur),Genre(survie),Genre(aventure),Age(18),Plateforme(console_salon),Plateforme(pc),Difficulte(difficile),ModeJeu(solo),Prix(40) -> Jeu(resident_evil_village)
+Type(simulation_vie),Genre(simulation),Age(7),Plateforme(vr),Difficulte(facile),ModeJeu(multijoueur),Prix(0) -> Jeu(vr_chat)
+Type(rythme),Genre(action),Age(3),Plateforme(pc),Difficulte(moyen),ModeJeu(solo),Prix(30) -> Jeu(beat_saber)
