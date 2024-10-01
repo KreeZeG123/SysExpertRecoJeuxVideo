@@ -1,4 +1,4 @@
-package com.example;
+package com.example.modele;
 
 import com.example.srcScanner.SourceScanner;
 
