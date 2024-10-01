@@ -21,7 +21,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version> <!-- ou la version la plus récente -->
                 <configuration>
-                    <mainClass>com.example.Main</mainClass>
+                    <mainClass>com.example.srcScanner.modele.Main</mainClass>
                 </configuration>
                 <executions>
                     <execution>

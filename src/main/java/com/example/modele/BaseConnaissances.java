@@ -1,4 +1,4 @@
-package modele;
+package com.example.modele;
 
 public class BaseConnaissances {
     private BaseRegles baseRegles;

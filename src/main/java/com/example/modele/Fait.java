@@ -1,4 +1,4 @@
-package modele;
+package com.example.modele;
 
 public class Fait {
     private Element element;
