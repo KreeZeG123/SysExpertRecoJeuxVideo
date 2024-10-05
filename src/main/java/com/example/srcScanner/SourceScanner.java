@@ -1,5 +1,7 @@
 package com.example.srcScanner;
 
+import com.example.modele.BaseRegles;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,7 +28,7 @@ public class SourceScanner {
         // Renvoie la base de connaissance
     }
 
-    public static void chargerFichierRegles(String cheminFichier) {
+    public static BaseRegles chargerFichierRegles(String cheminFichier) {
         // Ouvre le fichier
         List<String> reglesSrc;
         try {
@@ -35,20 +37,14 @@ public class SourceScanner {
             throw new RuntimeException(e);
         }
 
-        // Créer la base de règle
-        List<String> regles = new ArrayList<>();
-
-        // Parse les règles
+        // Création de la base de règle
+        BaseRegles BR = new BaseRegles();
         for (String regleSrc : reglesSrc) {
-            regles.add(SourceParser.parseRule(regleSrc));
-        }
-
-        // !!!! TEMPORAORE !!!!
-        for (String regle : regles) {
-            System.out.println(regle);
+            BR.ajouterRegle(ExtracteurSource.extraireRegle(regleSrc));
         }
 
         // Retourne la base de règle
+        return BR;
     }
 
     // Méthode pour lire un fichier et retourner les lignes nettoyées
