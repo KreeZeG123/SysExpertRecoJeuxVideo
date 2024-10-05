@@ -52,16 +52,6 @@ Horaire(nuit) -> Humeur(fatigue)
 Humeur(en_forme) -> Genre(action)
 Humeur(enerve) -> Genre(fantaisie)
 
-
-
-
-
-
-
-
-
-
-
 Type(rpg),Genre(action),Genre(aventure),Genre(puzzle),Age(12),Plateforme(console_portable),Difficulte(moyen)ModeJeu(solo),Prix(50) -> Jeu(the_legend_of_zelda_breath_of_the_wild)
 Type(rpg),Genre(action),Genre(histoire),Age(18),Plateforme(console_salon),Difficulte(facile),ModeJeu(solo),ModeJeu(multijoueur),Prix(20) -> Jeu(grand_theft_auto_v)
 Type(rpg),Genre(action),Genre(aventure),Genre(histoire),Age(18),Plateforme(pc),Plateforme(console_salon),Difficulte(facile),ModeJeu(solo),Prix(60) -> Jeu(red_dead_redemption_2)
