@@ -1,9 +1,10 @@
 package com.example.modele;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
-public class BaseFaits implements Cloneable {
+public class BaseFaits implements Cloneable, Iterable<Fait> {
 
     private Set<Fait> faits;
 
@@ -20,7 +21,36 @@ public class BaseFaits implements Cloneable {
     }
 
     public boolean contient(Element element) {
-        return faits.contains(new Fait(element));
+        for (Fait fait : faits) {
+            if (
+                    fait.getMot().equals(element.getMot()) &&
+                    fait.getValeur().equals(element.getValeur()) &&
+                    fait.getNegation() == element.getNegation()
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public BaseFaits ajouterFait(Fait fait) {
+        this.faits.add(fait);
+        return this;
+    }
+
+    public void ajouterFait(Consequent consequent) {
+        for (Element element : consequent) {
+            this.ajouterFait(new Fait(element));
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Fait fait : faits) {
+            sb.append(fait).append("\n");
+        }
+        return sb.toString();
     }
 
     /**
@@ -34,5 +64,10 @@ public class BaseFaits implements Cloneable {
         BaseFaits copie = (BaseFaits) super.clone();
         copie.faits = new HashSet<>(this.faits);
         return copie;
+    }
+
+    @Override
+    public Iterator<Fait> iterator() {
+        return this.faits.iterator();
     }
 }

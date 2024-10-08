@@ -1,6 +1,7 @@
 package com.example.modele;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Valeur implements InterfaceValeur{
 
@@ -21,5 +22,17 @@ public class Valeur implements InterfaceValeur{
     @Override
     public String toString() {
         return this.valeur;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Valeur valeur1)) return false;
+        return Objects.equals(valeur, valeur1.valeur);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(valeur);
     }
 }

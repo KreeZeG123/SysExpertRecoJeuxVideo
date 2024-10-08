@@ -11,8 +11,7 @@ public class ExtracteurSource {
 
         // Création du consequent
         Consequent consequent = new Consequent(
-                ExtracteurSource.extraireElement(consequentStr),
-                null
+                ExtracteurSource.extraireElement(consequentStr)
         );
 
         // Split elements prémisses

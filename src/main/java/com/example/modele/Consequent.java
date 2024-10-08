@@ -1,15 +1,8 @@
 package com.example.modele;
 
-public class Consequent
-{
-    private Premisse premisse;
+public class Consequent extends Premisse{
 
-    public Consequent(Element element, BaseFaits baseFaits) {
-        this.premisse = new Premisse(element);
-    }
-
-    @Override
-    public String toString() {
-        return premisse.toString();
+    public Consequent(Element e) {
+        super(e);
     }
 }

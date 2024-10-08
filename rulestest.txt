@@ -1,0 +1,8 @@
+Responsabilite(true), FaciliteLangue(true), Netherland(true) -> Dynamique(true)
+FaciliteLangue(true), English(true) -> Adaptabilite(true)
+Slave(true), Dynamique(true) -> Adaptabilite(true)
+Responsabilite(true) -> Leadership(true)
+FaciliteLangue(true) -> Netherland(true)
+Adaptabilite(true), Leadership(true) -> Accepte(true)
+Slave(true) -> FaciliteLangue(true)
+Leadership(true), Slave(true) -> Adaptabilite(true)

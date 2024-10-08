@@ -16,6 +16,18 @@ public class Element {
         this.negation = negation;
     }
 
+    public String getMot() {
+        return mot;
+    }
+
+    public Valeur getValeur() {
+        return valeur;
+    }
+
+    public boolean getNegation() {
+        return negation;
+    }
+
     public String toString(){
         return (mot+"("+valeur.toString()+")");
     }
