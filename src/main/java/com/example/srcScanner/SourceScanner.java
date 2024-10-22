@@ -1,6 +1,8 @@
 package com.example.srcScanner;
 
+import com.example.modele.BaseFaits;
 import com.example.modele.BaseRegles;
+import com.example.modele.Regle;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -28,38 +30,57 @@ public class SourceScanner {
         // Renvoie la base de connaissance
     }
 
-    public static BaseRegles chargerFichierRegles(String cheminFichier) {
+    public static BaseRegles chargerFichierRegles(String cheminFichier) throws IOException {
         // Ouvre le fichier
-        List<String> reglesSrc;
-        try {
-            reglesSrc = lireFichier(cheminFichier);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        List<String>[] reglesSrc = lireFichier(cheminFichier);
 
         // Création de la base de règle
         BaseRegles BR = new BaseRegles();
-        for (String regleSrc : reglesSrc) {
-            BR.ajouterRegle(ExtracteurSource.extraireRegle(regleSrc));
+        for (int i = 0; i < reglesSrc[1].size(); i++) {
+            String numLigne = reglesSrc[0].get(i);
+            String regleSrc = reglesSrc[1].get(i);
+            //System.out.println("l "+numLigne+" : "+regleSrc);
+            try {
+                Regle regle = ExtracteurSource.extraireRegle(regleSrc);
+                BR.ajouterRegle(regle);
+            } catch (IllegalArgumentException e) {
+                System.out.println("ligne "+numLigne+" : "+ e.getMessage());
+            }
         }
 
         // Retourne la base de règle
         return BR;
     }
 
+    public static BaseFaits chargerFichierFaits(String cheminFichier) throws IOException {
+        // TODO : Solution temporaire
+        return new BaseFaits();
+    }
+
     // Méthode pour lire un fichier et retourner les lignes nettoyées
-    private static List<String> lireFichier(String cheminFichier) throws IOException {
-        List<String> lignes = new ArrayList<>();
+    private static List<String>[] lireFichier(String cheminFichier) throws IOException {
+        List<String> lignesNettoyees = new ArrayList<>();
+        List<String> numerosLignesSrc = new ArrayList<>();
+
         BufferedReader reader = new BufferedReader(new FileReader(cheminFichier));
         String ligne;
+        int numeroLigne = 0;
+
         while ((ligne = reader.readLine()) != null) {
+            numeroLigne++; // Incrémente le numéro de ligne
             String lignePropre = nettoyerLigne(ligne);
             if (!lignePropre.isEmpty()) {
-                lignes.add(lignePropre);
+                lignesNettoyees.add(lignePropre);
+                numerosLignesSrc.add(String.valueOf(numeroLigne));
             }
         }
         reader.close();
-        return lignes;
+
+        // Crée un tableau de listes pour renvoyer les résultats
+        List<String>[] resultat = new List[2];
+        resultat[0] = numerosLignesSrc; // Liste des numéros de ligne
+        resultat[1] = lignesNettoyees; // Liste des lignes nettoyées
+        return resultat;
     }
 
     // Nettoie une ligne en supprimant les commentaires et les espaces superflus
