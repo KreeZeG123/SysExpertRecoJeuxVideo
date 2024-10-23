@@ -23,14 +23,13 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
     public boolean contient(Element element) {
         for (Fait fait : faits) {
             if (
-                    fait.getMot().equals(element.getMot()) &&
-                    fait.getValeur().equals(element.getValeur()) &&
-                    fait.getNegation() == element.getNegation()
+                fait.getMot().equals(element.getMot()) &&
+                fait.getValeur().equals(element.getValeur())
             ) {
-                return true;
+                return element.getNegation() == fait.getNegation();
             }
         }
-        return false;
+        return element.getNegation();
     }
 
     public BaseFaits ajouterFait(Fait fait) {

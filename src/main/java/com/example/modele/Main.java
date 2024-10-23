@@ -1,5 +1,6 @@
 package com.example.modele;
 
+import com.example.srcScanner.ExtracteurSource;
 import com.example.srcScanner.SourceScanner;
 
 import java.io.IOException;
@@ -9,31 +10,23 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
 
-        // Chargement des règles
-        String fichierRegles = "rulestest.txt";
-        BaseRegles BR = null;
-        try {
-            BR = SourceScanner.chargerFichierRegles(fichierRegles);
-        } catch (IOException e) {
-            System.out.println("Erreur : Le fichier de règles "+fichierRegles+" n'a pas pu être chargé !");
+        // Chargement des fichiers sources
+        BaseConnaissances BC = SourceScanner.chargerFichiersSource(
+                "rulestest.txt",
+                "factstest.txt",
+                "TODO"
+        );
+        if ( BC == null ) {
+            System.out.println("Erreur : Chargement des fichiers sources impossible !");
             return;
         }
 
-        // Chargement des faits
-        String fichierFaits = "";
-        BaseFaits BF = null;
-        try {
-            BF = SourceScanner.chargerFichierFaits(fichierFaits);
-        } catch (IOException e) {
-            System.out.println("Erreur : Le fichier de faits "+fichierFaits+" n'a pas pu être chargé !");
-            return;
+        System.out.println("==== Base Règles ====");
+        for ( Regle regle : BC.getBaseRegles().listeTrieeParNumero()) {
+            System.out.println(regle.toString());
         }
 
-        BF.ajouterFait(new Fait("Slave","true",false))
-          .ajouterFait(new Fait("Responsabilite","true",false));
-
-        BaseConnaissances BC = new BaseConnaissances(BR,BF);
-
+        System.out.println("==== Base Faits Initiale ====");
         for ( Fait fait : BC.getBaseFaits()) {
             System.out.println(fait.toString());
         }
@@ -43,7 +36,7 @@ public class Main {
         try {
             BaseFaits result = moteurInference.chainageAvant();
             moteurInference.afficherTrace();
-            System.out.println("==== Base Fait Resultat ====");
+            System.out.println("==== Base Faits Finale ====");
             System.out.println(result.toString());
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);

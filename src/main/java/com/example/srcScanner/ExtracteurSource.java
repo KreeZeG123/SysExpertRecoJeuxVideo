@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class ExtracteurSource {
 
-    public static Regle extraireRegle(String line) throws IllegalArgumentException {
+    public static Regle extraireRegle(String line, BaseRegles BR) throws IllegalArgumentException {
         // Split prémisses et conséquent
         if (!line.contains("->")) {
             throw new IllegalArgumentException("La ligne doit contenir une flèche (->) pour séparer les prémisses et le conséquent.");
@@ -47,16 +47,37 @@ public class ExtracteurSource {
             }
         }
 
+        // Nom de la regle
+        String nomRegle = "R?";
+        if ( BR != null) {
+            nomRegle = "R"+BR.tailleBr();
+        }
+
         // Création de la règle (lst prémisses + conséquent)
         return new Regle(
-                null,
+                BR,
                 premisse,
                 consequent,
-                "regle"
+                nomRegle
         );
     }
 
-    public static Element extraireElement(String elementStr) throws IllegalArgumentException {
+    public static Element extraireElement(String elementStrSrc) throws IllegalArgumentException {
+
+        String elementStr = elementStrSrc.trim();
+
+        // Vérifier s'il y a une négation (si l'élément commence par '!')
+        boolean negation = false;
+        if (elementStr.startsWith("!")) {
+            negation = true;
+            elementStr = elementStr.substring(1).trim();  // Retirer le '!' du début et trim les espaces
+        }
+
+        // Vérifier qu'il n'y a pas d'autre '!' dans la chaîne après avoir retiré celui au début
+        if (elementStr.contains("!")) {
+            throw new IllegalArgumentException("L'élément '" + elementStr + "' ne doit pas contenir plus d'un caractère '!' en début de chaîne.");
+        }
+
         // Vérifier qu'il y a exactement une parenthèse ouvrante et une parenthèse fermante
         int nbParentheseOuverte = elementStr.length() - elementStr.replace("(", "").length();
         int nbParentheseFermee = elementStr.length() - elementStr.replace(")", "").length();
@@ -87,7 +108,7 @@ public class ExtracteurSource {
         return new Element(
                 attribut,
                 new Valeur(valeur),
-                false
+                negation
         );
     }
 }

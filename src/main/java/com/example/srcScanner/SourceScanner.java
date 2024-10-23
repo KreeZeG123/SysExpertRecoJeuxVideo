@@ -1,8 +1,6 @@
 package com.example.srcScanner;
 
-import com.example.modele.BaseFaits;
-import com.example.modele.BaseRegles;
-import com.example.modele.Regle;
+import com.example.modele.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -16,7 +14,7 @@ public class SourceScanner {
 
     public static HashMap<String, Set<String>> attr = new HashMap<>();
 
-    public static void loadSourceFiles(String folderPath) {
+    public static void chargerFichiersSourceDepuisDossier(String cheminDossier) {
         // Ouvre le dossier
 
         // Charger les règles d'inférence
@@ -30,6 +28,31 @@ public class SourceScanner {
         // Renvoie la base de connaissance
     }
 
+    public static BaseConnaissances chargerFichiersSource(String cheminRegles, String cheminFaits, String cheminCoherences) {
+        // Chargement Base Regles
+        BaseRegles BR = null;
+        try {
+            BR = chargerFichierRegles(cheminRegles);
+        } catch (IOException e) {
+            System.out.println("Erreur : Le fichier de règles "+cheminRegles+" n'a pas pu être chargé !");
+            return null;
+        }
+
+        // Chargement Base Faits
+        BaseFaits BF = null;
+        try {
+            BF = chargerFichierFaits(cheminFaits);
+        } catch (IOException e) {
+            System.out.println("Erreur : Le fichier de faits "+cheminFaits+" n'a pas pu être chargé !");
+            return null;
+        }
+
+        // Chargement Règles de Cohérences
+
+        // Création de la Base de Connaissance
+        return new BaseConnaissances(BR,BF);
+    }
+
     public static BaseRegles chargerFichierRegles(String cheminFichier) throws IOException {
         // Ouvre le fichier
         List<String>[] reglesSrc = lireFichier(cheminFichier);
@@ -41,7 +64,7 @@ public class SourceScanner {
             String regleSrc = reglesSrc[1].get(i);
             //System.out.println("l "+numLigne+" : "+regleSrc);
             try {
-                Regle regle = ExtracteurSource.extraireRegle(regleSrc);
+                Regle regle = ExtracteurSource.extraireRegle(regleSrc, BR);
                 BR.ajouterRegle(regle);
             } catch (IllegalArgumentException e) {
                 System.out.println("ligne "+numLigne+" : "+ e.getMessage());
@@ -53,8 +76,24 @@ public class SourceScanner {
     }
 
     public static BaseFaits chargerFichierFaits(String cheminFichier) throws IOException {
-        // TODO : Solution temporaire
-        return new BaseFaits();
+        // Ouvre le fichier
+        List<String>[] reglesSrc = lireFichier(cheminFichier);
+
+        // Création de la base de faits
+        BaseFaits BF = new BaseFaits();
+        for (int i = 0; i < reglesSrc[1].size(); i++) {
+            String numLigne = reglesSrc[0].get(i);
+            String regleSrc = reglesSrc[1].get(i);
+            try {
+                Element element = ExtracteurSource.extraireElement(regleSrc);
+                BF.ajouterFait(new Fait(element));
+            } catch (IllegalArgumentException e) {
+                System.out.println("ligne "+numLigne+" : "+ e.getMessage());
+            }
+        }
+
+        // Retourne la base de faits
+        return BF;
     }
 
     // Méthode pour lire un fichier et retourner les lignes nettoyées
