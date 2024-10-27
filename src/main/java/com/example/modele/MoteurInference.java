@@ -11,6 +11,9 @@ public class MoteurInference {
 
     private List<Regle> explications;
 
+    // Temporaire
+    private int nivExplication = 0;
+
     public MoteurInference(BaseConnaissances BC) {
         this.BC = BC;
         this.explications = new ArrayList<Regle>();
@@ -45,7 +48,10 @@ public class MoteurInference {
                     regleSupprimable.add(r);
                     inf = true;
                     nbinf++;
-                    this.explications.add(r);
+                    if ( nivExplication > 0 ) {
+                        this.explications.add(r);
+                    }
+
                 }
             }
             // Suprimer les regles applicables
@@ -57,10 +63,23 @@ public class MoteurInference {
         return BF;
     }
 
-    public void afficherTrace() {
-        System.out.println("===== Trace =====");
-        for (int i = 0; i < this.explications.size(); i++) {
-            System.out.println(i+" : "+this.explications.get(i).toStringSansNomRegle());
+    public void afficherTrace(int nivExplication) {
+
+        switch (nivExplication) {
+            case 1 -> {
+                System.out.println("----- Trace Complete -----");
+                for (int i = 0; i < this.explications.size(); i++) {
+                    System.out.println("Iteration n°"+i+" - "+this.explications.get(i).toString());
+                }
+            }
+            case 2 -> {
+                System.out.println("----- Trace Abrégées -----");
+                for (int i = 0; i < this.explications.size(); i++) {
+                    System.out.println("Iteration n°"+i+" - "+this.explications.get(i).toStringNumRegle());
+                }
+            }
+            default -> {
+            }
         }
     }
 
@@ -80,7 +99,11 @@ public class MoteurInference {
 
     }
 
-    public void chargerBC() {
+    public int getNivExplication() {
+        return nivExplication;
+    }
 
+    public void setNivExplication(int nivExplication) {
+        this.nivExplication = nivExplication;
     }
 }

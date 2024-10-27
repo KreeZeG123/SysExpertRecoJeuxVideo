@@ -46,8 +46,13 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (Fait fait : faits) {
-            sb.append(fait).append("\n");
+        Iterator<Fait> iterator = faits.iterator();
+
+        while (iterator.hasNext()) {
+            sb.append(iterator.next());
+            if (iterator.hasNext()) {
+                sb.append("\n");
+            }
         }
         return sb.toString();
     }

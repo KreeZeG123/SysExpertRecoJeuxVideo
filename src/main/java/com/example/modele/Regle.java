@@ -43,20 +43,20 @@ public class Regle {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(nom);
-        stringBuilder.append(" : ");
-        stringBuilder.append(premisse.toString());
-        stringBuilder.append(" => ");
-        stringBuilder.append(consequent.toString());
-        return stringBuilder.toString();
+        return nom +
+                " : " +
+                premisse.toString() +
+                " => " +
+                consequent.toString();
     }
 
     public String toStringSansNomRegle() {
-        StringBuilder stringBuilder = new StringBuilder();;
-        stringBuilder.append(premisse.toString());
-        stringBuilder.append(" => ");
-        stringBuilder.append(consequent.toString());
-        return stringBuilder.toString();
+        return premisse.toString() +
+                " => " +
+                consequent.toString();
+    }
+
+    public String toStringNumRegle() {
+        return this.nom;
     }
 }

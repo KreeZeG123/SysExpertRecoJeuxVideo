@@ -1,9 +1,6 @@
 package com.example.modele;
 
-import com.example.srcScanner.ExtracteurSource;
 import com.example.srcScanner.SourceScanner;
-
-import java.io.IOException;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -35,7 +32,7 @@ public class Main {
 
         try {
             BaseFaits result = moteurInference.chainageAvant();
-            moteurInference.afficherTrace();
+            moteurInference.afficherTrace(moteurInference.getNivExplication());
             System.out.println("==== Base Faits Finale ====");
             System.out.println(result.toString());
         } catch (CloneNotSupportedException e) {
