@@ -111,4 +111,17 @@ public class ExtracteurSource {
                 negation
         );
     }
+
+    public static Fait extraireFait(String faitStrSrc) throws IllegalArgumentException {
+        // Verifie si il y a un seul élement sur un ligne et pas de ','
+        if ( faitStrSrc.contains(",") ) {
+            throw new IllegalArgumentException("Le fait '" + faitStrSrc + "' ne doit pas contenir plus d'un element ou un caractères ',' dans la chaîne.");
+        }
+
+        // Extraction de l'élement
+        Element element = ExtracteurSource.extraireElement(faitStrSrc);
+
+        // Création du fait
+        return new Fait(element);
+    }
 }

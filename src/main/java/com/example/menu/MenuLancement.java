@@ -58,7 +58,10 @@ public class MenuLancement {
                     } else {
                         System.out.println("\nLes fichiers sources ont été chargés avec succès.\n");
 
-                        System.out.println("---- Base Règles ----");
+                        SourceScanner.detecterMotsSimilaires(BC);
+                        SourceScanner.detecterValeursSimilaires(BC);
+
+                        System.out.println("---- Base Règles Initiale ----");
                         for ( Regle regle : BC.getBaseRegles().listeTrieeParNumero()) {
                             System.out.println(regle.toString());
                         }

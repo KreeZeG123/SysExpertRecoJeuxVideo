@@ -69,13 +69,13 @@ public class MoteurInference {
             case 1 -> {
                 System.out.println("----- Trace Complete -----");
                 for (int i = 0; i < this.explications.size(); i++) {
-                    System.out.println("Iteration n°"+i+" - "+this.explications.get(i).toString());
+                    System.out.println("Iteration "+i+" - "+this.explications.get(i).toString());
                 }
             }
             case 2 -> {
                 System.out.println("----- Trace Abrégées -----");
                 for (int i = 0; i < this.explications.size(); i++) {
-                    System.out.println("Iteration n°"+i+" - "+this.explications.get(i).toStringNumRegle());
+                    System.out.println("Iteration "+i+" - "+this.explications.get(i).toStringNumRegle());
                 }
             }
             default -> {

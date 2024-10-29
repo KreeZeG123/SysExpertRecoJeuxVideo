@@ -5,28 +5,9 @@ import com.example.modele.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SourceScanner {
-
-    public static HashMap<String, Set<String>> attr = new HashMap<>();
-
-    public static void chargerFichiersSourceDepuisDossier(String cheminDossier) {
-        // Ouvre le dossier
-
-        // Charger les règles d'inférence
-
-        // Chargle les règles d'incohérence
-
-        // Charge les faits
-
-        // Créeer la base de connaissance
-
-        // Renvoie la base de connaissance
-    }
 
     public static BaseConnaissances chargerFichiersSource(String cheminRegles, String cheminFaits, String cheminCoherences) {
         // Chargement Base Regles
@@ -54,7 +35,7 @@ public class SourceScanner {
     }
 
     public static BaseRegles chargerFichierRegles(String cheminFichier) throws IOException {
-        // Ouvre le fichier
+        // Ouvre le fichier de règles
         List<String>[] reglesSrc = lireFichier(cheminFichier);
 
         // Création de la base de règle
@@ -62,7 +43,6 @@ public class SourceScanner {
         for (int i = 0; i < reglesSrc[1].size(); i++) {
             String numLigne = reglesSrc[0].get(i);
             String regleSrc = reglesSrc[1].get(i);
-            //System.out.println("l "+numLigne+" : "+regleSrc);
             try {
                 Regle regle = ExtracteurSource.extraireRegle(regleSrc, BR);
                 BR.ajouterRegle(regle);
@@ -76,17 +56,16 @@ public class SourceScanner {
     }
 
     public static BaseFaits chargerFichierFaits(String cheminFichier) throws IOException {
-        // Ouvre le fichier
-        List<String>[] reglesSrc = lireFichier(cheminFichier);
+        // Ouvre le fichier de faits
+        List<String>[] faitsSrc = lireFichier(cheminFichier);
 
         // Création de la base de faits
         BaseFaits BF = new BaseFaits();
-        for (int i = 0; i < reglesSrc[1].size(); i++) {
-            String numLigne = reglesSrc[0].get(i);
-            String regleSrc = reglesSrc[1].get(i);
+        for (int i = 0; i < faitsSrc[1].size(); i++) {
+            String numLigne = faitsSrc[0].get(i);
+            String faitSrc = faitsSrc[1].get(i);
             try {
-                Element element = ExtracteurSource.extraireElement(regleSrc);
-                BF.ajouterFait(new Fait(element));
+                BF.ajouterFait(ExtracteurSource.extraireFait(faitSrc));
             } catch (IllegalArgumentException e) {
                 System.out.println("ligne "+numLigne+" : "+ e.getMessage());
             }
@@ -130,6 +109,128 @@ public class SourceScanner {
         }
         ligne = ligne.replaceAll(" ","");
         return ligne;
+    }
+
+    public static void detecterMotsSimilaires(BaseConnaissances BC) {
+        Set<String> mots = extrairesTousLesMots(BC);
+
+        // Comparer chaque mot avec tous les autres dans le Set
+        List<String> motsList = new ArrayList<>(mots);
+        for (int i = 0; i < motsList.size(); i++) {
+            String mot1 = motsList.get(i);
+            for (int j = i + 1; j < motsList.size(); j++) {
+                String mot2 = motsList.get(j);
+                if (stringSontSimilaires(mot1, mot2)) {
+                    System.out.println("Attention : Mots similaires détectés, possible erreur de frappe : '" + mot1 + "' et '" + mot2+"'");
+                }
+            }
+        }
+    }
+
+    public static void detecterValeursSimilaires(BaseConnaissances BC) {
+        Map<String, Set<String>> valeursParAttribut = extrairesToutesLesValeurs(BC);
+
+        // Comparer les valeurs pour chaque attribut
+        for (Map.Entry<String, Set<String>> entry : valeursParAttribut.entrySet()) {
+            String attribut = entry.getKey();
+            Set<String> valeurs = entry.getValue();
+
+            List<String> valeursList = new ArrayList<>(valeurs);
+            for (int i = 0; i < valeursList.size(); i++) {
+                String valeur1 = valeursList.get(i);
+                for (int j = i + 1; j < valeursList.size(); j++) {
+                    String valeur2 = valeursList.get(j);
+                    if (stringSontSimilaires(valeur1, valeur2)) {
+                        System.out.println("Attention : Valeurs similaires détectées pour l'attribut '" + attribut + "', possible erreur de frappe ou de syntaxe : '" + valeur1 + "' et '" + valeur2+"'");
+                    }
+                }
+            }
+        }
+    }
+
+    private static Map<String, Set<String>> extrairesToutesLesValeurs(BaseConnaissances BC) {
+        BaseRegles baseRegles = BC.getBaseRegles();
+        BaseFaits baseFaits = BC.getBaseFaits();
+
+        Map<String, Set<String>> valeursParAttribut = new HashMap<>();
+
+        // Ajouter les valeurs des règles par attribut
+        for (Regle regle : baseRegles) {
+            for (Element e : regle.getPremisse()) {
+                String attribut = e.getMot();
+                String valeur = e.getValeur().toString();
+                valeursParAttribut.computeIfAbsent(attribut, k -> new HashSet<>()).add(valeur);
+            }
+            for (Element e : regle.getConsequent()) {
+                String attribut = e.getMot();
+                String valeur = e.getValeur().toString();
+                valeursParAttribut.computeIfAbsent(attribut, k -> new HashSet<>()).add(valeur);
+            }
+        }
+
+        // Ajouter les valeurs des faits par attribut
+        for (Fait fait : baseFaits) {
+            String attribut = fait.getMot();
+            String valeur = fait.getValeur().toString();
+            valeursParAttribut.computeIfAbsent(attribut, k -> new HashSet<>()).add(valeur);
+        }
+
+        return valeursParAttribut;
+    }
+
+    private static Set<String> extrairesTousLesMots(BaseConnaissances BC) {
+        BaseRegles baseRegles = BC.getBaseRegles();
+        BaseFaits baseFaits = BC.getBaseFaits();
+
+        // Rassembler tous les mots uniques dans un Set
+        Set<String> tousLesMots = new HashSet<>();
+
+        // Ajouter tous les mots des faits
+        for (Fait fait : baseFaits) {
+            tousLesMots.add(fait.getMot());
+        }
+
+        // Ajouter tous les mots des règles (dans prémisses et conséquents)
+        for (Regle regle : baseRegles) {
+            for (Element e : regle.getPremisse()) {
+                tousLesMots.add(e.getMot());
+            }
+            for (Element e : regle.getConsequent()) {
+                tousLesMots.add(e.getMot());
+            }
+        }
+        return tousLesMots;
+    }
+
+    // Méthode pour comparer deux mots et vérifier leur similarité
+    private static boolean stringSontSimilaires(String mot1, String mot2) {
+        int seuil = 2; // Maximum de 2 modifications pour être considéré comme similaire
+        int longueurMinimale = 3; // Longueur minimale des mots à comparer
+
+        // Vérification de la longueur minimale
+        if (mot1.length() < longueurMinimale || mot2.length() < longueurMinimale) {
+            return false;
+        }
+
+        return calculerDistanceLevenshtein(mot1, mot2) <= seuil;
+    }
+
+    // Calcule la distance de Levenshtein entre deux mots
+    private static int calculerDistanceLevenshtein(String mot1, String mot2) {
+        int[][] dp = new int[mot1.length() + 1][mot2.length() + 1];
+
+        for (int i = 0; i <= mot1.length(); i++) dp[i][0] = i;
+        for (int j = 0; j <= mot2.length(); j++) dp[0][j] = j;
+
+        for (int i = 1; i <= mot1.length(); i++) {
+            for (int j = 1; j <= mot2.length(); j++) {
+                int cost = (mot1.charAt(i - 1) == mot2.charAt(j - 1)) ? 0 : 1;
+                dp[i][j] = Math.min(dp[i - 1][j] + 1, // Suppression
+                        Math.min(dp[i][j - 1] + 1, // Insertion
+                                dp[i - 1][j - 1] + cost)); // Substitution
+            }
+        }
+        return dp[mot1.length()][mot2.length()];
     }
 
 }
