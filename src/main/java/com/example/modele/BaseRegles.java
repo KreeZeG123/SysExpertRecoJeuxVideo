@@ -1,9 +1,6 @@
 package com.example.modele;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class BaseRegles implements Iterable<Regle>, Cloneable {
     private Set<Regle> regles;
@@ -29,6 +26,10 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
         return  this.regles.iterator();
     }
 
+    public int tailleBr() {
+        return this.regles.size();
+    }
+
     /**
      * Méthode qui fait une copie superficielle d'une base de règles
      *
@@ -40,5 +41,32 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
         BaseRegles copie = (BaseRegles) super.clone();
         copie.regles = new HashSet<>(this.regles);
         return copie;
+    }
+
+    public Iterable<Regle> listeTrieeParNumero() {
+        // Créer une liste a partir du set de regles
+        List<Regle> reglesTriees = new ArrayList<>(regles);
+
+        // Trie la liste en fonction du numéro de la regle dans son nom
+        reglesTriees.sort(Comparator.comparing(this::extraireNumeroRegle)
+                .thenComparing(Regle::getNom));
+
+        // Retourner une liste qui est itérable
+        return reglesTriees;
+    }
+
+    // Méthode pour extraire le numéro d'une règle, renvoie Integer.MAX_VALUE si le format ne correspond pas
+    private int extraireNumeroRegle(Regle regle) {
+        String nom = regle.getNom();
+        if (nom.startsWith("R")) {
+            try {
+                return Integer.parseInt(nom.substring(1));
+            } catch (NumberFormatException e) {
+                // Si le numéro n'est pas un entier valide
+                return Integer.MAX_VALUE;
+            }
+        }
+        // Si la règle ne suit pas le format "R"+nombre
+        return Integer.MAX_VALUE;
     }
 }

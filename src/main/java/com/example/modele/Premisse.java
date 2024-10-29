@@ -33,6 +33,10 @@ public class Premisse implements Iterable<Element>{
         return true;
     }
 
+    public Set<Element> getElements() {
+        return elements;
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

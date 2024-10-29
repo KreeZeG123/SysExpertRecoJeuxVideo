@@ -1,9 +1,10 @@
 package com.example.modele;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
-public class BaseFaits implements Cloneable {
+public class BaseFaits implements Cloneable, Iterable<Fait> {
 
     private Set<Fait> faits;
 
@@ -20,7 +21,40 @@ public class BaseFaits implements Cloneable {
     }
 
     public boolean contient(Element element) {
-        return faits.contains(new Fait(element));
+        for (Fait fait : faits) {
+            if (
+                fait.getMot().equals(element.getMot()) &&
+                fait.getValeur().equals(element.getValeur())
+            ) {
+                return element.getNegation() == fait.getNegation();
+            }
+        }
+        return element.getNegation();
+    }
+
+    public BaseFaits ajouterFait(Fait fait) {
+        this.faits.add(fait);
+        return this;
+    }
+
+    public void ajouterFait(Consequent consequent) {
+        for (Element element : consequent) {
+            this.ajouterFait(new Fait(element));
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Iterator<Fait> iterator = faits.iterator();
+
+        while (iterator.hasNext()) {
+            sb.append(iterator.next());
+            if (iterator.hasNext()) {
+                sb.append("\n");
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -34,5 +68,10 @@ public class BaseFaits implements Cloneable {
         BaseFaits copie = (BaseFaits) super.clone();
         copie.faits = new HashSet<>(this.faits);
         return copie;
+    }
+
+    @Override
+    public Iterator<Fait> iterator() {
+        return this.faits.iterator();
     }
 }

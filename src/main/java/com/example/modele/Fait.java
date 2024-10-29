@@ -2,22 +2,31 @@ package com.example.modele;
 
 import java.util.Objects;
 
-public class Fait {
-    private Element element;
+public class Fait extends Element {
+
+    public Fait(String mot, Valeur valeur, boolean negation) {
+        super(mot, valeur, negation);
+    }
+
+    public Fait(String mot, String valeur, boolean negation) {
+        super(mot, new Valeur(valeur), negation);
+    }
 
     public Fait(Element element) {
-        this.element = element;
+        super(
+                element.getMot(),
+                element.getValeur(),
+                element.getNegation()
+        );
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Fait fait)) return false;
-        return Objects.equals(element, fait.element);
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(element);
+        return super.hashCode();
     }
 }

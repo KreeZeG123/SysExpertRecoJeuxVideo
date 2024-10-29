@@ -6,15 +6,35 @@ import com.example.srcScanner.SourceScanner;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        BaseRegles BR = SourceScanner.chargerFichierRegles("rules.txt");
-        BaseFaits BF = new BaseFaits();
 
-        BaseConnaissances BC = new BaseConnaissances(BR,BF);
+        // Chargement des fichiers sources
+        BaseConnaissances BC = SourceScanner.chargerFichiersSource(
+                "rulestest.txt",
+                "factstest.txt",
+                "TODO"
+        );
+        if ( BC == null ) {
+            System.out.println("Erreur : Chargement des fichiers sources impossible !");
+            return;
+        }
+
+        System.out.println("==== Base Règles ====");
+        for ( Regle regle : BC.getBaseRegles().listeTrieeParNumero()) {
+            System.out.println(regle.toString());
+        }
+
+        System.out.println("==== Base Faits Initiale ====");
+        for ( Fait fait : BC.getBaseFaits()) {
+            System.out.println(fait.toString());
+        }
 
         MoteurInference moteurInference = new MoteurInference(BC);
 
         try {
-            moteurInference.chainageAvant();
+            BaseFaits result = moteurInference.chainageAvant();
+            moteurInference.afficherTrace(moteurInference.getNivExplication());
+            System.out.println("==== Base Faits Finale ====");
+            System.out.println(result.toString());
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
