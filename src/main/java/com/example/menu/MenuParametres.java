@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 public class MenuParametres {
 
+    private static boolean optionsSelecionnee = false;
+
     private static MenuParametres instance;
 
     public static MenuParametres getInstance() {
@@ -21,7 +23,7 @@ public class MenuParametres {
 
         while (true) {
             System.out.println("\n==== Menu Paramètres ====");
-            System.out.println("1 - Groupement des règles par paquets");
+            System.out.println("1 - "+obtenirOptionSelectionnee()+" Groupement des règles par paquets");
             System.out.println("2 - Choisir critère de sélection de règle");
             System.out.println("3 - Définir Explication");
             System.out.println("4 - Retour au menu principal");
@@ -32,8 +34,14 @@ public class MenuParametres {
 
             switch (choix) {
                 case 1:
-                    System.out.println("Groupement des règles par paquets sélectionné.");
+                    if ( !optionsSelecionnee ) {
+                        System.out.println("Groupement des règles par paquets sélectionné.");
+                    } else {
+                        System.out.println("Groupement des règles par paquets désélectionné.");
+                    }
                     // TODO: Implémenter groupement de règles
+                    System.out.println("!! TODO !!");
+                    selectionnerOptions();
                     break;
                 case 2:
                     MenuSelectionRegles.getInstance().display();
@@ -47,5 +55,13 @@ public class MenuParametres {
                     System.out.println("Choix invalide, veuillez réessayer.");
             }
         }
+    }
+
+    private String obtenirOptionSelectionnee() {
+        return optionsSelecionnee ? "[X]" : "[ ]";
+    }
+
+    private void selectionnerOptions() {
+        optionsSelecionnee = !optionsSelecionnee;
     }
 }

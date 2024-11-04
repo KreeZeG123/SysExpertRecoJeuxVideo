@@ -17,13 +17,21 @@ public class MenuPrincipal {
     private MenuPrincipal() {}
 
     public void display() {
-        Scanner scanner = new Scanner(System.in);
+        boolean debut = true;
 
+        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\n==== Menu Principal ====");
+            if (debut) {
+                System.out.println("Par Défaut :");
+                System.out.println(" - Critère sélectionné : règle ayant le plus de prémisses à satisfaire.");
+                System.out.println(" - Explication sélectionnée : sous forme de traces complètes.");
+                System.out.println("------------------------");
+                debut = false;
+            }
             System.out.println("1 - Charger Source");
             System.out.println("2 - Actions");
-            System.out.println("3 - Settings");
+            System.out.println("3 - Paramètres");
             System.out.println("4 - Quitter");
             System.out.print("Choisissez une option : ");
 

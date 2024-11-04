@@ -12,7 +12,7 @@ public class MoteurInference {
     private List<Regle> explications;
 
     // Temporaire
-    private int nivExplication = 0;
+    private int nivExplication = 1;
 
     public MoteurInference(BaseConnaissances BC) {
         this.BC = BC;
