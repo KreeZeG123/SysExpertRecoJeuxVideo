@@ -1,18 +1,16 @@
 package com.example.modele;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class BaseFaits implements Cloneable, Iterable<Fait> {
 
-    private Set<Fait> faits;
+    private List<Fait> faits;
 
     public BaseFaits() {
-        this.faits = new HashSet<>();
+        this.faits = new ArrayList<>();
     }
 
-    public BaseFaits(Set<Fait> faits) {
+    public BaseFaits(List<Fait> faits) {
         this.faits = faits;
     }
 
@@ -43,6 +41,10 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
         }
     }
 
+    public List<Fait> getFaits() {
+        return faits;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -66,7 +68,7 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
     @Override
     public Object clone() throws CloneNotSupportedException {
         BaseFaits copie = (BaseFaits) super.clone();
-        copie.faits = new HashSet<>(this.faits);
+        copie.faits = new ArrayList<>(this.faits);
         return copie;
     }
 

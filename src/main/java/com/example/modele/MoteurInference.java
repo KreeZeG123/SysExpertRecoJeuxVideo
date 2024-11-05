@@ -9,19 +9,20 @@ public class MoteurInference {
 
     private BaseConnaissances BC;
 
-    private List<Regle> explications;
+    private List<Explication> explications;
 
     // Temporaire
-    private int nivExplication = 0;
+    private int nivExplication = 1;
 
     public MoteurInference(BaseConnaissances BC) {
         this.BC = BC;
-        this.explications = new ArrayList<Regle>();
+        this.explications = new ArrayList<Explication>();
     }
 
     public BaseFaits chainageAvant() throws CloneNotSupportedException {
         boolean inf = true;
         int nbinf = 0;
+        int nbIteration = 0;
 
         BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
         BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
@@ -29,6 +30,7 @@ public class MoteurInference {
 
         // Boucle qui fait des inférences jusqu'à saturer la BF
         Set<Regle> regleSupprimable = new HashSet<Regle>();
+        Set<Consequent> consequentsAjoutable = new HashSet<>();
         while (inf) {
             inf = false;
             // Parcoure les règles de la BR
@@ -44,20 +46,31 @@ public class MoteurInference {
                 }
                 // Applique la règle si elle est déclancheable
                 if (declanchable) {
-                    BF.ajouterFait(r.getConsequent());
+                    consequentsAjoutable.add(r.getConsequent());
                     regleSupprimable.add(r);
                     inf = true;
-                    nbinf++;
                     if ( nivExplication > 0 ) {
-                        this.explications.add(r);
+                        this.explications.add(new Explication(nbIteration,r));
                     }
+                    nbinf++;
 
                 }
             }
-            // Suprimer les regles applicables
-            for (Regle r : regleSupprimable) {
-                BR.supprimerRegle(r);
+            // Ajouter les nouveaux faits à la BF
+            if ( !consequentsAjoutable.isEmpty() ) {
+                for (Consequent c : consequentsAjoutable ) {
+                    BF.ajouterFait(c);
+                }
+                consequentsAjoutable.clear();
             }
+            // Supprimer les règles déja appliquée de la BR
+            if ( !regleSupprimable.isEmpty() ) {
+                for (Regle r : regleSupprimable) {
+                    BR.supprimerRegle(r);
+                }
+                regleSupprimable.clear();
+            }
+            nbIteration++;
         }
 
         return BF;
@@ -69,13 +82,15 @@ public class MoteurInference {
             case 1 -> {
                 System.out.println("----- Trace Complete -----");
                 for (int i = 0; i < this.explications.size(); i++) {
-                    System.out.println("Iteration "+i+" - "+this.explications.get(i).toString());
+                    Explication explication = this.explications.get(i);
+                    System.out.println("Iteration "+explication.getNumInference()+" - "+explication.getRegle().toString());
                 }
             }
             case 2 -> {
                 System.out.println("----- Trace Abrégées -----");
                 for (int i = 0; i < this.explications.size(); i++) {
-                    System.out.println("Iteration "+i+" - "+this.explications.get(i).toStringNumRegle());
+                    Explication explication = this.explications.get(i);
+                    System.out.println("Iteration "+explication.getNumInference()+" - "+explication.getRegle().toStringNumRegle());
                 }
             }
             default -> {
@@ -105,5 +120,18 @@ public class MoteurInference {
 
     public void setNivExplication(int nivExplication) {
         this.nivExplication = nivExplication;
+    }
+
+    public BaseConnaissances getBC() {
+        return BC;
+    }
+
+    public void test() throws CloneNotSupportedException {
+        BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
+        BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
+
+        for (Regle r : BR) {
+            System.out.println(r.toString());
+        }
     }
 }

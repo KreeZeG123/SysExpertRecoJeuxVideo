@@ -55,6 +55,13 @@ public class MenuActions {
                     break;
                 case 3:
                     return;
+                case 4:
+                    try {
+                        MenuLancement.getInstance().getMoteurInference().test();
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 default:
                     System.out.println("Choix invalide, veuillez réessayer.");
             }

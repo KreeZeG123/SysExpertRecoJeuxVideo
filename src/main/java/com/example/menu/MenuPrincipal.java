@@ -17,14 +17,21 @@ public class MenuPrincipal {
     private MenuPrincipal() {}
 
     public void display() {
-        Scanner scanner = new Scanner(System.in);
+        boolean debut = true;
 
+        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\n==== Menu Principal ====");
-            System.out.println("1 - Charger Source");
-            System.out.println("2 - Actions");
-            System.out.println("3 - Settings");
-            System.out.println("4 - Quitter");
+            if (debut) {
+                System.out.println("Par Défaut :");
+                System.out.println(" - Critère sélectionné : règle ayant le plus de prémisses à satisfaire.");
+                System.out.println(" - Explication sélectionnée : sous forme de traces complètes.");
+                System.out.println("------------------------");
+                debut = false;
+            }
+            System.out.println("1 - Actions");
+            System.out.println("2 - Paramètres");
+            System.out.println("3 - Quitter");
             System.out.print("Choisissez une option : ");
 
             int choix = scanner.nextInt();
@@ -32,16 +39,12 @@ public class MenuPrincipal {
 
             switch (choix) {
                 case 1:
-                    System.out.println("Chargement des fichiers sources...");
-                    // TODO: Appel de la méthode pour charger les fichiers sources
-                    break;
-                case 2:
                     MenuActions.getInstance().display();
                     break;
-                case 3:
+                case 2:
                     MenuParametres.getInstance().display();
                     break;
-                case 4:
+                case 3:
                     System.out.println("Fermeture du système expert. Au revoir !");
                     return;
                 default:

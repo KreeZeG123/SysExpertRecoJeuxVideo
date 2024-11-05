@@ -1,12 +1,22 @@
 package com.example.modele;
 
+import com.example.modele.iterateur.IterateurFaitRecent;
+import com.example.modele.iterateur.IterateurPlusDePremisses;
+
 import java.util.*;
 
 public class BaseRegles implements Iterable<Regle>, Cloneable {
-    private Set<Regle> regles;
+
+    private List<Regle> regles;
+
+    private BaseConnaissances BC = null;
 
     public BaseRegles() {
-        this.regles = new HashSet<Regle>();
+        this.regles = new ArrayList<>();
+    }
+
+    public void setBC(BaseConnaissances BC) {
+        this.BC = BC;
     }
 
     public void ajouterRegle(Regle regle) {
@@ -23,7 +33,21 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
 
     @Override
     public Iterator<Regle> iterator() {
-        return  this.regles.iterator();
+        if ( this.BC == null ) {
+            return regles.iterator();
+        } else {
+            switch (this.BC.choixRegle) {
+                case PLUS_DE_PREMISSES -> {
+                    return new IterateurPlusDePremisses(this.regles);
+                }
+                case FAIT_RECENT -> {
+                    return new IterateurFaitRecent(this.regles,this.BC.getBaseFaits());
+                }
+                default -> {
+                    return regles.iterator();
+                }
+            }
+        }
     }
 
     public int tailleBr() {
@@ -39,7 +63,8 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         BaseRegles copie = (BaseRegles) super.clone();
-        copie.regles = new HashSet<>(this.regles);
+        copie.regles = new ArrayList<>(this.regles);
+        copie.BC = this.BC;
         return copie;
     }
 
