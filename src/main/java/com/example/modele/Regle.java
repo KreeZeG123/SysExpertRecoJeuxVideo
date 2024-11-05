@@ -59,4 +59,8 @@ public class Regle {
     public String toStringNumRegle() {
         return this.nom;
     }
+
+    public int getNombreDePremisses() {
+        return this.premisse.getElements().size();
+    }
 }

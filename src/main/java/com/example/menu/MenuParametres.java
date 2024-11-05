@@ -34,12 +34,12 @@ public class MenuParametres {
 
             switch (choix) {
                 case 1:
+                    // TODO: Implémenter groupement de règles
                     if ( !optionsSelecionnee ) {
                         System.out.println("Groupement des règles par paquets sélectionné.");
                     } else {
                         System.out.println("Groupement des règles par paquets désélectionné.");
                     }
-                    // TODO: Implémenter groupement de règles
                     System.out.println("!! TODO !!");
                     selectionnerOptions();
                     break;
