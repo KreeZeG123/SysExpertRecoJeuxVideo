@@ -31,7 +31,9 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
     }
 
     public BaseFaits ajouterFait(Fait fait) {
-        this.faits.add(fait);
+        if ( !this.faits.contains(fait) ) {
+            this.faits.add(fait);
+        }
         return this;
     }
 
@@ -75,5 +77,14 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
     @Override
     public Iterator<Fait> iterator() {
         return this.faits.iterator();
+    }
+
+    public Fait contientAttribut(String mot) {
+        for (Fait fait : faits) {
+            if (fait.getMot().equals(mot)) {
+                return fait;
+            }
+        }
+        return null;
     }
 }

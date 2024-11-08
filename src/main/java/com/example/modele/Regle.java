@@ -1,8 +1,8 @@
 package com.example.modele;
 
+import com.example.modele.enumeration.TypeAttribut;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Regle {
@@ -62,5 +62,28 @@ public class Regle {
 
     public int getNombreDePremisses() {
         return this.premisse.getElements().size();
+    }
+
+    public boolean estCoherent(BaseFaits BF, BaseConnaissances BC) {
+        List<Element> elements = new ArrayList<>(this.consequent.getElements());
+        for (Element e : elements) {;
+            String attribut = e.getMot();
+            Valeur valeur = e.getValeur();
+            // Detection d'une règle d'incohérence
+            if (attribut.contains("INCOHERENT") ) {
+                return false;
+            }
+            // Detection de fait avec d'autres valeurs alors que l'attribut est monovalué
+            if (BC.getCoherence().obtenirTypeAttribut(attribut) == TypeAttribut.MONO) {
+                Fait faitRecherchee = BF.contientAttribut(attribut);
+                boolean erreurMonovaluation = (faitRecherchee != null) && !(valeur.equals(faitRecherchee.getValeur()));
+                if ( erreurMonovaluation ) {
+                    System.out.println("Attention : L'attribut monovalué \""+attribut+"\" a plusieurs valeurs en meme temps");
+                }
+                return !erreurMonovaluation;
+            }
+        }
+
+        return true;
     }
 }

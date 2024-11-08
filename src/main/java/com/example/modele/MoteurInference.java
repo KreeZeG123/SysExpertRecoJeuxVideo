@@ -1,9 +1,6 @@
 package com.example.modele;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MoteurInference {
 
@@ -46,13 +43,25 @@ public class MoteurInference {
                 }
                 // Applique la règle si elle est déclancheable
                 if (declanchable) {
-                    consequentsAjoutable.add(r.getConsequent());
                     regleSupprimable.add(r);
                     inf = true;
-                    if ( nivExplication > 0 ) {
-                        this.explications.add(new Explication(nbIteration,r));
-                    }
                     nbinf++;
+                    if ( r.estCoherent(BF, BC) ) {
+                        consequentsAjoutable.add(r.getConsequent());
+                        if (nivExplication > 0) {
+                            this.explications.add(new Explication(nbIteration, r));
+                        }
+                    } else {
+                        System.out.println("Attention : Incohérence detectée via la règle \""+r.toString()+"\"");
+                        System.out.print("Souhaitez vous continuez l'inférence (oui/non) : ");
+                        Scanner scanner = new Scanner(System.in);
+                        if ( scanner.nextLine().contains("non") ) {
+                            inf = false;
+                            System.out.println("\nL'inférence a été arrêté, voici la base de connaisance lors de l'arrêt :\n");
+                        }else {
+                            System.out.println();
+                        }
+                    }
 
                 }
             }
