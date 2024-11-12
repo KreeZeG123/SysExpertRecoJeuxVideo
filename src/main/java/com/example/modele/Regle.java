@@ -12,6 +12,8 @@ public class Regle {
 
     private String nom;
 
+    private String paquet;
+
     private BaseRegles baseRegles;
 
     public Regle(BaseRegles baseRegles,Premisse premisse,Consequent consequent,String nom) {
@@ -19,6 +21,15 @@ public class Regle {
         this.premisse = premisse;
         this.consequent = consequent;
         this.nom = nom;
+        this.paquet = "?";
+    }
+
+    public void setPaquet(String paquet) {
+        this.paquet = paquet;
+    }
+
+    public String getPaquet() {
+        return paquet;
     }
 
     public boolean regleApplicable(){

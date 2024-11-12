@@ -29,10 +29,19 @@ public class ExtracteurSource {
             throw new IllegalArgumentException("La partie conséquent ne doit pas être vide.");
         }
 
-        // Création du conséquent
-        Consequent consequent = new Consequent(
-                ExtracteurSource.extraireElement(consequentStr)
-        );
+        // Split éléments conséquents
+        String[] consequentArray = consequentStr.split(",",-1);
+
+        // Création des conséquents
+        Consequent consequent = new Consequent();
+        for (String elementStr : consequentArray) {
+            if ( !elementStr.isEmpty()) {
+                consequent.ajouterElement(ExtracteurSource.extraireElement(elementStr));
+            }
+            else {
+                throw new IllegalArgumentException("Un element est vide après une virgule dans la partie conséquent !");
+            }
+        }
 
         // Split éléments prémisses
         String[] premisseArray = premisseStr.split(",",-1);

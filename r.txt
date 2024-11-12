@@ -6,5 +6,5 @@ FaciliteLangue(true),English(true) -> Adaptabilite(true)
 Responsabilite(true), FaciliteLangue(true), Netherland(true) -> Dynamique(true)
 Adaptabilite(true), Leadership(true) -> Accepte(true)
 Leadership(true), Slave(true) -> Adaptabilite(true)
-
+Leadership(true), Slave(true) -> Adaptabilite(true), Accepte(true)
 Accepte(true) -> Netherland(false)
