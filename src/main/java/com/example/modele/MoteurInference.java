@@ -107,64 +107,48 @@ public class MoteurInference {
         }
     }
 
-    public void chainageArriere(Premisse b) throws CloneNotSupportedException {
+    public boolean chainageArriere(ArrayList<Element> b) throws CloneNotSupportedException {
         BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
         BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
-
-        //Antecedent
-        Consequent consequent = new Consequent(new Element("Cool", new Valeur("true"), false));
-        Element elem1 = new Element("Accepte", new Valeur("true"), false);
-        consequent.ajouterElement(elem1);
-
-        //Consequent
-        Premisse antecedent = new Premisse(new Element("Adaptabilite", new Valeur("true"), false));
-        Element elem2 = new Element("Leadership", new Valeur("true"), false);
-        antecedent.ajouterElement(elem2);
-
-        BR.ajouterRegle(antecedent, consequent);
-
-        Iterator<Regle> iterateurBR = BR.iterator();
-        Iterator<Element> iterateurElements = b.iterator();
+        //Consequent consequent = new Consequent(new Element("Neerlandais", new Valeur("true"),false));
+        //Element e = new Element("Allemand", new Valeur("false"), false);
+        //consequent.ajouterElement(e);
+        //.ajouterRegle(new Premisse(new Element("Netherland", new Valeur("true"), false)), consequent);
         this.explications.clear();
-        System.out.println("Démarrage arrière");
-        boolean demandable;
-        //Premier cas : b est dans BF
-        demandable = BF.contient(b.getElements());
-        if (demandable) {
-            System.out.println("b est dans BF");
-        }
-
-        //2ème cas : si b est déductible à partir de BR U BF
-        while (iterateurBR.hasNext() && !demandable) {
-            Regle r = iterateurBR.next();
-            System.out.println(r);
-            //Si les elements de b sont les consequent d'une règle, on recherche si les antécédents de cette règles sont dans la BF
-            if (r.getConsequent().equalsListElement(b.getElements())) { //On vérifie si b est un consequent d'une règle
-                demandable = BF.contient(r.getAntecedants());
-            }
-            if (demandable) {
-                System.out.println("\nb est demandable avec la règle" + r.toStringSansNomRegle());
-            }
-        }
-
-        //3ème cas : si b est demandable
-        boolean regleActivable = true;
-        //Tant qu'on n'a pas trouvé et qu'une règle est applicable
-        while (!demandable && regleActivable) {
-            iterateurBR = BR.iterator();
-            //On parcourt les règles et on regarde si chaque element de chaque antécédents est dans la BF
-            while (iterateurBR.hasNext() && !demandable) {
-                Regle r = iterateurBR.next();
-                //Si la base de fait contient les antécédents de la regle et que les consequent de la regle est b, alors b est demandable;
-                demandable = BF.contient(r.getAntecedants()) && r.getConsequent().equalsListElement(b.getElements());
-                //Si la base de fait contient les antécédents de la regle, alors une règle est applicable
-                regleActivable = BF.contient(r.getAntecedants());
-
-                BF.ajouterFait(r.getConsequent());
-            }
-        }
-
+        System.out.println("\nOn recherche si " + b.toString() + " est demandable\n");
+        return chainageArriereRecursif(b, BR, BF, 0 );
     }
+
+    public boolean chainageArriereRecursif(ArrayList<Element> b, BaseRegles BR, BaseFaits BF, int nbIteration){
+        nbIteration++;
+        Iterator<Regle> iterateurBR = BR.iterator();
+        if(BF.contient(b)){
+            System.out.println(b + "est déjà dans la BF");
+            return true;
+        }else{
+            System.out.println(b + " n'est pas dans la BF, on doit le rechercher");
+        }
+        //Deuxième cas : si b est demandable avec une règle
+        while (iterateurBR.hasNext()) {
+            Regle r = iterateurBR.next();
+            if(r.getConsequent().equalsListElement(b)){
+                System.out.println("La regle " + r.toStringSansNomRegle() + " a pour consequent " + b);
+                if(BF.contient(r.getAntecedants())) {
+                    System.out.println(b + " est demandable avec la regle " + r.toStringSansNomRegle());
+                    this.explications.add(new Explication(nbIteration, r));
+                    return true;
+                }
+                else{
+                    System.out.println("On recherche si " + r.getAntecedants() + " est demandable\n");
+                    this.explications.add(new Explication(nbIteration, r));
+                    return chainageArriereRecursif(r.getAntecedants(), BR, BF, nbIteration);
+                }
+            }
+        }
+        System.out.println("Aucune règle permet de demander " + b);
+        return false;
+    }
+
 
     public void modifierGroupementPaquet(boolean etat) {
 

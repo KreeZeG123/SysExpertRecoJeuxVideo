@@ -17,7 +17,7 @@ public class Premisse implements Iterable<Element>{
         this.baseFaits = null;
     }
 
-    public Premisse(ArrayList<Element> elements,Boolean negatif, BaseFaits baseFaits){
+    public Premisse(ArrayList<Element> elements, BaseFaits baseFaits){
         this.elements = elements;
         this.baseFaits = baseFaits;
     }
@@ -43,8 +43,8 @@ public class Premisse implements Iterable<Element>{
         return true;
     }
 
-    public List<Element> getElements() {
-        return elements;
+    public ArrayList<Element> getElements() {
+        return (ArrayList<Element>) elements;
     }
 
     @Override
