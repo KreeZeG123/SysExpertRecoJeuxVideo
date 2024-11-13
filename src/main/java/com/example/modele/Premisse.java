@@ -1,28 +1,38 @@
 package com.example.modele;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class Premisse implements Iterable<Element>{
-    private Set<Element> elements;
+    private List<Element> elements;
     private BaseFaits baseFaits;
 
     public Premisse() {
-        this.elements = new HashSet<>();
+        this.elements = new ArrayList<>();
         this.baseFaits = null;
     }
 
     public Premisse(Element element) {
-        this.elements = new HashSet<>();
+        this.elements = new ArrayList<>();
         this.elements.add(element);
         this.baseFaits = null;
     }
 
-    public Premisse(Set<Element> elements,Boolean negatif, BaseFaits baseFaits){
+    public Premisse(ArrayList<Element> elements,Boolean negatif, BaseFaits baseFaits){
         this.elements = elements;
         this.baseFaits = baseFaits;
+    }
+
+    public boolean equalsListElement(List<Element> elements){
+        boolean egal = true;
+        if(this.elements.size()!=elements.size()){
+            egal = false;
+        }
+        for(Element e: this.elements){
+            if(!elements.contains(e)){
+                egal=false;
+            }
+        }
+        return egal;
     }
 
     public void ajouterElement(Element element){
@@ -33,7 +43,7 @@ public class Premisse implements Iterable<Element>{
         return true;
     }
 
-    public Set<Element> getElements() {
+    public List<Element> getElements() {
         return elements;
     }
 

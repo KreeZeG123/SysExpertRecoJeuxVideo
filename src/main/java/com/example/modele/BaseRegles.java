@@ -50,6 +50,11 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
         }
     }
 
+    public BaseRegles ajouterRegle(Premisse antecedent, Consequent consequent){
+        regles.add(new Regle(this, antecedent, consequent, "R9"));
+        return this;
+    }
+
     public int tailleBr() {
         return this.regles.size();
     }

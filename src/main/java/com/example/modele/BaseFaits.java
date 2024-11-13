@@ -30,6 +30,15 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
         return element.getNegation();
     }
 
+    public boolean contient(List<Element> elements){
+        Iterator<Element> iterator = elements.iterator();
+        boolean contient = true;
+        while(iterator.hasNext() && contient){
+            contient = this.contient(iterator.next());
+        }
+        return contient;
+    }
+
     public BaseFaits ajouterFait(Fait fait) {
         if ( !this.faits.contains(fait) ) {
             this.faits.add(fait);
