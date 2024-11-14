@@ -24,6 +24,14 @@ public class Regle {
         this.paquet = "?";
     }
 
+    public Regle(BaseRegles baseRegles,Premisse premisse,Consequent consequent,String nom, String paquet) {
+        this.baseRegles = baseRegles;
+        this.premisse = premisse;
+        this.consequent = consequent;
+        this.nom = nom;
+        this.paquet = paquet;
+    }
+
     public void setPaquet(String paquet) {
         this.paquet = paquet;
     }
@@ -52,9 +60,38 @@ public class Regle {
         return consequent;
     }
 
+    public void setBaseRegles(BaseRegles baseRegles) {
+        this.baseRegles = baseRegles;
+    }
+
+    public BaseRegles getBaseRegles() {
+        return baseRegles;
+    }
+
     @Override
     public String toString() {
-        return nom +
+        String paquetStr = "";
+        if ( this.baseRegles != null &&
+             this.baseRegles.getBC() != null &&
+             this.baseRegles.groupementParPaquet
+        ) {
+            paquetStr = "["+paquet+"] ";
+        }
+        return paquetStr +
+                nom +
+                " : " +
+                premisse.toString() +
+                " => " +
+                consequent.toString();
+    }
+
+    public String toString(boolean paquetUsed) {
+        String paquetStr = "";
+        if ( paquetUsed ) {
+            paquetStr = "["+paquet+"] ";
+        }
+        return paquetStr +
+                nom +
                 " : " +
                 premisse.toString() +
                 " => " +

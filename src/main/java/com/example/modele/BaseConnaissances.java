@@ -3,7 +3,7 @@ package com.example.modele;
 import com.example.modele.enumeration.ChoixRegle;
 import com.example.modele.enumeration.TypeAttribut;
 
-import java.util.HashSet;
+import java.util.*;
 
 public class BaseConnaissances {
 

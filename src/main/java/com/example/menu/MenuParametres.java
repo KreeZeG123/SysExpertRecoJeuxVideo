@@ -1,5 +1,7 @@
 package com.example.menu;
 
+import com.example.modele.BaseConnaissances;
+
 import java.util.Scanner;
 
 public class MenuParametres {
@@ -34,13 +36,14 @@ public class MenuParametres {
 
             switch (choix) {
                 case 1:
-                    // TODO: Implémenter groupement de règles
+                    BaseConnaissances BC = MenuLancement.getInstance().getMoteurInference().getBC();
                     if ( !optionsSelecionnee ) {
-                        System.out.println("Groupement des règles par paquets sélectionné.");
+                        BC.getBaseRegles().groupementParPaquet = true;
+                        System.out.println("\nGroupement des règles par paquets sélectionné.");
                     } else {
-                        System.out.println("Groupement des règles par paquets désélectionné.");
+                        BC.getBaseRegles().groupementParPaquet = false;
+                        System.out.println("\nGroupement des règles par paquets désélectionné.");
                     }
-                    System.out.println("!! TODO !!");
                     selectionnerOptions();
                     break;
                 case 2:

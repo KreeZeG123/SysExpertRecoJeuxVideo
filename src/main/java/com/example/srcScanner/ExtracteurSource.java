@@ -9,11 +9,20 @@ import java.util.Arrays;
 public class ExtracteurSource {
 
     public static Regle extraireRegle(String line, BaseRegles BR) throws IllegalArgumentException {
+        // Vérifie si nous avons un paque de spécifié
+        String paquet = "?";
+        String lineRegle = line;
+        if ( line.contains(":") ) {
+            String[] splitPaquet = line.split(":");
+            paquet = splitPaquet[0];
+            lineRegle = splitPaquet[1];
+        }
+
         // Split prémisses et conséquent
         if (!line.contains("->")) {
             throw new IllegalArgumentException("La ligne doit contenir une flèche (->) pour séparer les prémisses et le conséquent.");
         }
-        String[] splitFleche = line.split("->",-1);
+        String[] splitFleche = lineRegle.split("->",-1);
         // Vérifie que nous avons bien deux parties après la séparation
         if (splitFleche.length != 2) {
             throw new IllegalArgumentException("La ligne doit contenir une partie prémisses et une partie conséquent.");
@@ -61,6 +70,7 @@ public class ExtracteurSource {
         String nomRegle = "R?";
         if ( BR != null) {
             nomRegle = "R"+BR.tailleBr();
+
         }
 
         // Création de la règle (lst prémisses + conséquent)
@@ -68,7 +78,8 @@ public class ExtracteurSource {
                 BR,
                 premisse,
                 consequent,
-                nomRegle
+                nomRegle,
+                paquet
         );
     }
 
