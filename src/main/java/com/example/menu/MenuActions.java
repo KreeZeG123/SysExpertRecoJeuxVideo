@@ -56,13 +56,17 @@ public class MenuActions {
                         ArrayList<Element> elements = new ArrayList<>();
                         elements.add(new Element("Neerlandais", new Valeur("true"), false));
                         elements.add(new Element("Allemand", new Valeur("false"), false));
-                        boolean result = moteurInference.chainageArriere(elements);
+                        ArrayList<Boolean> result = moteurInference.chainageArriere(elements);
                         moteurInference.afficherTrace(moteurInference.getNivExplication());
                         System.out.println("---- Resultat ----");
-                        if(result){
-                            System.out.println(elements.toString() + " est demandable");
-                        }else{
-                            System.out.println(elements.toString() + " n'est pas demandable");
+                        int i =0;
+                        for(Boolean b : result){
+                            if(b){
+                                System.out.println(elements.get(i) + " est demandable");
+                            }else{
+                                System.out.println(elements.get(i) + " n'est pas demandable");
+                            }
+                            i++;
                         }
                         System.out.println("---------------------------");
                     } catch (CloneNotSupportedException e) {
@@ -71,13 +75,6 @@ public class MenuActions {
                     break;
                 case 3:
                     return;
-                case 4:
-                    try {
-                        MenuLancement.getInstance().getMoteurInference().test();
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
                 default:
                     System.out.println("Choix invalide, veuillez réessayer.");
             }

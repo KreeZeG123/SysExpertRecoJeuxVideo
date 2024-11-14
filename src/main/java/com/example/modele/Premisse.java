@@ -22,6 +22,15 @@ public class Premisse implements Iterable<Element>{
         this.baseFaits = baseFaits;
     }
 
+    public boolean contient(Element e){
+        for(Element elem :elements){
+            if(elem.equals(e)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean equalsListElement(List<Element> elements){
         boolean egal = true;
         if(this.elements.size()!=elements.size()){
