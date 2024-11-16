@@ -31,19 +31,6 @@ public class Premisse implements Iterable<Element>{
         return false;
     }
 
-    public boolean equalsListElement(List<Element> elements){
-        boolean egal = true;
-        if(this.elements.size()!=elements.size()){
-            egal = false;
-        }
-        for(Element e: this.elements){
-            if(!elements.contains(e)){
-                egal=false;
-            }
-        }
-        return egal;
-    }
-
     public void ajouterElement(Element element){
         this.elements.add(element);
     }
