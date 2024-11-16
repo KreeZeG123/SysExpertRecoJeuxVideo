@@ -107,30 +107,35 @@ public class MoteurInference {
         }
     }
 
-    public ArrayList<Boolean> chainageArriere(ArrayList<Element> b) throws CloneNotSupportedException {
+    public Boolean chainageArriere(Premisse b) throws CloneNotSupportedException {
         BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
         BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
+        Iterator<Regle> iterateurBR = BR.iterator();
+        Iterator<Element> iterateurPremisse = b.getElements().iterator();
         ArrayList<Boolean> results = new ArrayList<>();
         //Consequent consequent = new Consequent(new Element("Neerlandais", new Valeur("true"),false));
         //Element e = new Element("Allemand", new Valeur("false"), false);
         //consequent.ajouterElement(e);
         //.ajouterRegle(new Premisse(new Element("Netherland", new Valeur("true"), false)), consequent);
         this.explications.clear();
-        System.out.println("On recherche si " + b.toString() + " est demandable\n");
-        for(Element e : b){
+        System.out.println("On recherche si la prémisse" + b.toString() + " est demandable\n");
+        boolean demandable = true;
+        while (iterateurPremisse.hasNext() && demandable) {
+            Element e = iterateurPremisse.next();
             System.out.println("----------------------------------------");
             System.out.println("On recherche si " + e + " est demandable");
             System.out.println("----------------------------------------");
-            results.add(chainageArriereRecursif(e, BR, BF, 0));
+            if(!chainageArriereRecursif(e,BR,BF,0)) {
+                demandable = false;
+            }
         }
-        return results;
+        return demandable;
     }
 
     public boolean chainageArriereRecursif(Element b, BaseRegles BR, BaseFaits BF, int nbIteration) throws CloneNotSupportedException {
         nbIteration++;
         Iterator<Regle> iterateurBR = BR.iterator();
         BaseFaits BFtemp= (BaseFaits) this.BC.getBaseFaits().clone();
-        BFtemp.ajouterFait(new Fait(b.getMot(),b.getValeur(),b.getNegation()));
         if(BF.contient(b)){
             System.out.println(b + "est déjà dans la BF");
             return true;
@@ -139,22 +144,24 @@ public class MoteurInference {
         }
         //Deuxième cas : si b est demandable avec une règle
         while (iterateurBR.hasNext()) {
+            //On regarde regle par regle
             Regle r = iterateurBR.next();
-            if(r.getConsequent().contient(b) && BFtemp.contient(r.getConsequent().getElements())){
+            //Si le consequent de r contient b, on regarde si l'antecedent est dans la BF. Si oui b est demandable sinon on cherche les antécédents de r
+            if(r.getConsequent().contient(b)){
                 System.out.println("La regle " + r.toStringSansNomRegle() + " a pour consequent " + r.getConsequent().getElements().toString());
-                if(BFtemp.contient(r.getAntecedants())) {
+                //Si la BF contient tous les antécédents
+                if(BF.contient(r.getAntecedants())) {
                     System.out.println(b + " est demandable avec la regle " + r.toStringSansNomRegle() + "\n");
                     this.explications.add(new Explication(nbIteration, r));
                     return true;
                 }
+                //Si la BF ne contient pas tous les antécédents, on les cherche
                 else{
                     this.explications.add(new Explication(nbIteration, r));
                     for (Element e : r.getAntecedants()){
                         System.out.println("On recherche si " + e + " est demandable\n");
                         return chainageArriereRecursif(e, BR, BF, nbIteration);
-
                     }
-
                 }
             }
         }

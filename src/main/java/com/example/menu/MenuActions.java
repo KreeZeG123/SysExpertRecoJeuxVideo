@@ -53,20 +53,15 @@ public class MenuActions {
                 case 2:
                     System.out.println("Exécution du chainage arrière...");
                     try {
-                        ArrayList<Element> elements = new ArrayList<>();
-                        elements.add(new Element("Neerlandais", new Valeur("true"), false));
-                        elements.add(new Element("Allemand", new Valeur("false"), false));
-                        ArrayList<Boolean> result = moteurInference.chainageArriere(elements);
+                        Premisse b = new Premisse(new Element("Neerlandais", new Valeur("true"), false));
+                        b.ajouterElement(new Element("Allemand", new Valeur("false"), false));
+                        boolean result = moteurInference.chainageArriere(b);
                         moteurInference.afficherTrace(moteurInference.getNivExplication());
                         System.out.println("---- Resultat ----");
-                        int i =0;
-                        for(Boolean b : result){
-                            if(b){
-                                System.out.println(elements.get(i) + " est demandable");
-                            }else{
-                                System.out.println(elements.get(i) + " n'est pas demandable");
-                            }
-                            i++;
+                        if(result){
+                            System.out.println("La prémisse " + b +" est demandable");
+                        }else{
+                            System.out.println("La prémisse " + b +" n'est pas demandable");
                         }
                         System.out.println("---------------------------");
                     } catch (CloneNotSupportedException e) {
