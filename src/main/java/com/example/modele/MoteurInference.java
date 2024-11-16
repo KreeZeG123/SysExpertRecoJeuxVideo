@@ -32,9 +32,9 @@ public class MoteurInference {
             boolean inf = true;
 
             BaseRegles ensembleRegles = BRparPaquet.get(indicePaquet);
-           if ( ensembleRegles.groupementParPaquet ) {
-               System.out.println("Inférence sur le paquet ["+ensembleRegles.getRegles().get(0).getPaquet()+"]\n");
-           }
+            if ( ensembleRegles.groupementParPaquet ) {
+                System.out.println("Inférence sur le paquet ["+ensembleRegles.getRegles().get(0).getPaquet()+"]\n");
+            }
 
             // Ensembles pour les règles à supprimer et les faits à ajouter
             Set<Regle> regleSupprimable = new HashSet<Regle>();
