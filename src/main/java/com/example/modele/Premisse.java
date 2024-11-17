@@ -1,8 +1,10 @@
 package com.example.modele;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-public class Premisse implements Iterable<Element>{
+public class Premisse implements Iterable<Element> {
     private List<Element> elements;
     private BaseFaits baseFaits;
 
@@ -17,34 +19,39 @@ public class Premisse implements Iterable<Element>{
         this.baseFaits = null;
     }
 
-    public Premisse(ArrayList<Element> elements,Boolean negatif, BaseFaits baseFaits){
+    public Premisse(ArrayList<Element> elements, BaseFaits baseFaits) {
         this.elements = elements;
         this.baseFaits = baseFaits;
     }
 
-    public boolean equalsListElement(List<Element> elements){
-        boolean egal = true;
-        if(this.elements.size()!=elements.size()){
-            egal = false;
-        }
-        for(Element e: this.elements){
-            if(!elements.contains(e)){
-                egal=false;
+    public boolean contient(Element e) {
+        for (Element elem : elements) {
+            if (elem.equals(e)) {
+                return true;
             }
         }
-        return egal;
+        return false;
     }
 
-    public void ajouterElement(Element element){
-        this.elements.add(element);
-    }
-
-    public boolean premisseValide(){
+    public boolean contient(ArrayList<Element> elements) {
+        for (Element elem : elements) {
+            if (!contient(elem)) {
+                return false;
+            }
+        }
         return true;
     }
 
-    public List<Element> getElements() {
-        return elements;
+    public void ajouterElement(Element element) {
+        this.elements.add(element);
+    }
+
+    public boolean premisseValide() {
+        return true;
+    }
+
+    public ArrayList<Element> getElements() {
+        return (ArrayList<Element>) elements;
     }
 
     @Override
@@ -54,7 +61,7 @@ public class Premisse implements Iterable<Element>{
             stringBuilder.append(element.toString());
             stringBuilder.append(",");
         }
-        stringBuilder.deleteCharAt(stringBuilder.length()-1);
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         return stringBuilder.toString();
     }
 

@@ -1,7 +1,6 @@
 package com.example.menu;
 
-import com.example.modele.BaseFaits;
-import com.example.modele.MoteurInference;
+import com.example.modele.*;
 
 import java.util.Scanner;
 
@@ -9,15 +8,16 @@ public class MenuActions {
 
     private static MenuActions instance;
 
+    private MenuActions() {
+    }
+
     public static MenuActions getInstance() {
-        if ( MenuActions.instance == null ) {
+        if (MenuActions.instance == null) {
             return new MenuActions();
         } else {
             return MenuActions.instance;
         }
     }
-
-    private MenuActions() {}
 
     public void display() {
         Scanner scanner = new Scanner(System.in);
@@ -31,13 +31,10 @@ public class MenuActions {
 
             int choix = scanner.nextInt();
             scanner.nextLine();
-
+            MoteurInference moteurInference = MenuLancement.getInstance().getMoteurInference();
             switch (choix) {
                 case 1:
                     System.out.println("\nExécution du chainage avant ...\n");
-
-                    MoteurInference moteurInference = MenuLancement.getInstance().getMoteurInference();
-
                     try {
                         BaseFaits result = moteurInference.chainageAvant();
                         moteurInference.afficherTrace(moteurInference.getNivExplication());
@@ -50,18 +47,24 @@ public class MenuActions {
 
                     break;
                 case 2:
-                    System.out.println("Exécution du chainage arrière...");
-                    // TODO: Appel de la méthode pour le chainage arrière
+                    System.out.println("Exécution du chainage arrière...\n");
+                    try {
+                        Consequent b = new Consequent(new Element("Neerlandais", new Valeur("true"), false));
+
+                        boolean result = moteurInference.chainageArriere(b);
+                        moteurInference.afficherTrace(moteurInference.getNivExplication());
+                        System.out.println("\n---- Resultat ----");
+                        if (result) {
+                            System.out.println("La prémisse " + b + " est demandable");
+                        } else {
+                            System.out.println("La prémisse " + b + " n'est pas demandable");
+                        }
+                    } catch (CloneNotSupportedException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case 3:
                     return;
-                case 4:
-                    try {
-                        MenuLancement.getInstance().getMoteurInference().test();
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
                 default:
                     System.out.println("Choix invalide, veuillez réessayer.");
             }

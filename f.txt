@@ -1,3 +1,2 @@
 Slave(true)
 Responsabilite(true)
-Valeur(4)

@@ -31,11 +31,10 @@ public class MenuLancement {
             System.out.println("2 - Quitter");
             System.out.print("Choisissez une option : ");
 
-            int choix = scanner.nextInt();
-            scanner.nextLine();
+            String choix = scanner.nextLine();
 
             switch (choix) {
-                case 1:
+                case "1":
                     System.out.println("");
                     // Demander les chemins de fichiers à l'utilisateur
                     System.out.print("Veuillez entrer le chemin du fichier de règles : ");
@@ -86,7 +85,7 @@ public class MenuLancement {
                     }
                     break;
 
-                case 2:
+                case "2":
                     System.out.println("Fermeture du système expert. Au revoir !");
                     return;
 

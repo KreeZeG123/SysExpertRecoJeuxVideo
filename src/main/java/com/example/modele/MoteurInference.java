@@ -41,7 +41,6 @@ public class MoteurInference {
             }
         }
 
-
         // Parcourt des différents groupes de règles
         List<BaseRegles> BRparPaquet = BR.getBrParPaquet();
         for (int indicePaquet = 0; indicePaquet < BRparPaquet.size() && !stop; indicePaquet++) {
@@ -136,14 +135,14 @@ public class MoteurInference {
                 System.out.println("----- Trace Complete -----");
                 for (int i = 0; i < this.explications.size(); i++) {
                     Explication explication = this.explications.get(i);
-                    System.out.println("Iteration "+explication.getNumInference()+" - "+explication.getRegle().toString());
+                    System.out.println("Iteration " + explication.getNumInference() + " - " + explication.getRegle().toString());
                 }
             }
             case 2 -> {
                 System.out.println("----- Trace Abrégées -----");
                 for (int i = 0; i < this.explications.size(); i++) {
                     Explication explication = this.explications.get(i);
-                    System.out.println("Iteration "+explication.getNumInference()+" - "+explication.getRegle().toStringNumRegle());
+                    System.out.println("Iteration " + explication.getNumInference() + " - " + explication.getRegle().toStringNumRegle());
                 }
             }
             default -> {
@@ -151,64 +150,48 @@ public class MoteurInference {
         }
     }
 
-    public void chainageArriere(Premisse b) throws CloneNotSupportedException {
+    public Boolean chainageArriere(Consequent b) throws CloneNotSupportedException {
         BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
         BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
-
-        //Antecedent
-        Consequent consequent = new Consequent(new Element("Cool", new Valeur("true"), false));
-        Element elem1 = new Element("Accepte", new Valeur("true"), false);
-        consequent.ajouterElement(elem1);
-
-        //Consequent
-        Premisse antecedent = new Premisse(new Element("Adaptabilite", new Valeur("true"), false));
-        Element elem2 = new Element("Leadership", new Valeur("true"), false);
-        antecedent.ajouterElement(elem2);
-
-        BR.ajouterRegle(antecedent, consequent);
-
-        Iterator<Regle> iterateurBR = BR.iterator();
-        Iterator<Element> iterateurElements = b.iterator();
         this.explications.clear();
-        System.out.println("Démarrage arrière");
-        boolean demandable;
-        //Premier cas : b est dans BF
-        demandable = BF.contient(b.getElements());
-        if (demandable) {
-            System.out.println("b est dans BF");
-        }
-
-        //2ème cas : si b est déductible à partir de BR U BF
-        while (iterateurBR.hasNext() && !demandable) {
-            Regle r = iterateurBR.next();
-            System.out.println(r);
-            //Si les elements de b sont les consequent d'une règle, on recherche si les antécédents de cette règles sont dans la BF
-            if (r.getConsequent().equalsListElement(b.getElements())) { //On vérifie si b est un consequent d'une règle
-                demandable = BF.contient(r.getAntecedants());
-            }
-            if (demandable) {
-                System.out.println("\nb est demandable avec la règle" + r.toStringSansNomRegle());
-            }
-        }
-
-        //3ème cas : si b est demandable
-        boolean regleActivable = true;
-        //Tant qu'on n'a pas trouvé et qu'une règle est applicable
-        while (!demandable && regleActivable) {
-            iterateurBR = BR.iterator();
-            //On parcourt les règles et on regarde si chaque element de chaque antécédents est dans la BF
-            while (iterateurBR.hasNext() && !demandable) {
-                Regle r = iterateurBR.next();
-                //Si la base de fait contient les antécédents de la regle et que les consequent de la regle est b, alors b est demandable;
-                demandable = BF.contient(r.getAntecedants()) && r.getConsequent().equalsListElement(b.getElements());
-                //Si la base de fait contient les antécédents de la regle, alors une règle est applicable
-                regleActivable = BF.contient(r.getAntecedants());
-
-                BF.ajouterFait(r.getConsequent());
-            }
-        }
-
+        System.out.println("On recherche si la prémisse " + b + " est demandable\n");
+        return chainageArriereRecursif(b, BR, BF, 0);
     }
+
+    public boolean chainageArriereRecursif(Consequent b, BaseRegles BR, BaseFaits BF, int nbIteration) {
+        nbIteration++;
+        Iterator<Regle> iterateurBR = BR.iterator();
+        //cas 1
+        if (BF.contient(b.getElements())) {
+            explications.add(new Explication(nbIteration, new Regle(BR, new Premisse(new Element("BF", new Valeur("Contient"), false)), b, "#")));
+            return true;
+        }
+        while (iterateurBR.hasNext()) {
+            //On regarde regle par regle
+            Regle r = iterateurBR.next();
+            //Si le consequent de r contient tous les elements de b, on regarde si l'antecedent est dans la BF. Si oui b est demandable sinon on cherche les antécédents de r
+            if (r.getConsequent().contient(b.getElements())) {
+                //Si la BF contient tous les antécédents, cas 2
+                if (BF.contient(r.getAntecedants())) {
+                    this.explications.add(new Explication(nbIteration, r));
+                    return true;
+                }
+                //Si la BF ne contient pas tous les antécédents, on les cherche, cas 3
+                else {
+                    this.explications.add(new Explication(nbIteration, r));
+                    //On recherche si les antecedents de la regle sont demandables
+                    for (Element elem : r.getAntecedants()) {
+                        if (!chainageArriereRecursif(new Consequent(elem), BR, BF, nbIteration)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     public void modifierGroupementPaquet(boolean etat) {
 

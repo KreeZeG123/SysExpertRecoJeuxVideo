@@ -52,7 +52,7 @@ public class Regle {
         return nom;
     }
 
-    public List<Element> getAntecedants() {
+    public ArrayList<Element> getAntecedants() {
         return new ArrayList<>(this.premisse.getElements());
     }
 
