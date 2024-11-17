@@ -110,19 +110,17 @@ public class MoteurInference {
     public Boolean chainageArriere(Consequent b) throws CloneNotSupportedException {
         BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
         BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
-        Iterator<Regle> iterateurBR = BR.iterator();
-        Iterator<Element> iterateurPremisse = b.getElements().iterator();
-        ArrayList<Boolean> results = new ArrayList<>();
         this.explications.clear();
         System.out.println("On recherche si la prémisse " + b + " est demandable\n");
         return chainageArriereRecursif(b, BR, BF, 0);
     }
 
-    public boolean chainageArriereRecursif(Consequent b, BaseRegles BR, BaseFaits BF, int nbIteration) throws CloneNotSupportedException {
+    public boolean chainageArriereRecursif(Consequent b, BaseRegles BR, BaseFaits BF, int nbIteration) {
         nbIteration++;
         Iterator<Regle> iterateurBR = BR.iterator();
         //cas 1
         if (BF.contient(b.getElements())) {
+            explications.add(new Explication(nbIteration, new Regle(BR, new Premisse(new Element("BF", new Valeur("Contient"), false)), b, "#")));
             return true;
         }
         while (iterateurBR.hasNext()) {
@@ -138,7 +136,6 @@ public class MoteurInference {
                 //Si la BF ne contient pas tous les antécédents, on les cherche, cas 3
                 else {
                     this.explications.add(new Explication(nbIteration, r));
-                    ArrayList<Boolean> antecedentsDemandable = new ArrayList<>();
                     //On recherche si les antecedents de la regle sont demandables
                     for (Element elem : r.getAntecedants()) {
                         if (!chainageArriereRecursif(new Consequent(elem), BR, BF, nbIteration)) {
