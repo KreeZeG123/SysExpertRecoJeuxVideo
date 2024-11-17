@@ -1,6 +1,7 @@
 package com.example.menu;
 
 import com.example.modele.*;
+import com.example.srcScanner.ExtracteurSource;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -44,21 +45,35 @@ public class MenuActions {
 
                     break;
                 case 2:
-                    System.out.println("Exécution du chainage arrière...\n");
-                    try {
-                        Consequent b = new Consequent(new Element("Neerlandais", new Valeur("true"), false));
 
-                        boolean result = moteurInference.chainageArriere(b);
+                    try {
+                        // Demander à l'utilisateur d'entrer le but à déduire
+                        System.out.print("\nVeuillez taper votre but à déduire :");
+                        Scanner scannerBut = new Scanner(System.in);
+
+                        // Extraire le conséquent à partir de l'entrée utilisateur
+                        Consequent but = ExtracteurSource.extraireConsequent(scannerBut.nextLine());
+
+                        System.out.println("\nExécution du chainage arrière...\n");
+
+                        // Effectuer le chaînage arrière
+                        boolean result = moteurInference.chainageArriere(but);
+
+                        // Afficher le résultat final
                         moteurInference.afficherTrace(moteurInference.getNivExplication());
                         System.out.println("\n---- Resultat ----");
                         if (result) {
-                            System.out.println("La prémisse " + b + " est demandable");
+                            System.out.println("Le conséquent " + but + " est demandable");
                         } else {
-                            System.out.println("La prémisse " + b + " n'est pas demandable");
+                            System.out.println("Le conséquent " + but + " n'est pas demandable");
                         }
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Erreur : "+ e.getMessage());
                     } catch (CloneNotSupportedException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Une erreur inattendue s'est produite lors du chaînage arrière.", e);
                     }
+
+
                     break;
                 case 3:
                     return;
