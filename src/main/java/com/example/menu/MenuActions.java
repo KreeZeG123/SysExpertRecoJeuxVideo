@@ -3,6 +3,7 @@ package com.example.menu;
 import com.example.modele.*;
 import com.example.srcScanner.ExtracteurSource;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 public class MenuActions {
@@ -13,11 +14,7 @@ public class MenuActions {
     }
 
     public static MenuActions getInstance() {
-        if (MenuActions.instance == null) {
-            return new MenuActions();
-        } else {
-            return MenuActions.instance;
-        }
+        return Objects.requireNonNullElseGet(MenuActions.instance, MenuActions::new);
     }
 
     public void display() {

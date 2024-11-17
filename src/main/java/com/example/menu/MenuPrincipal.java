@@ -1,20 +1,18 @@
 package com.example.menu;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 public class MenuPrincipal {
 
     private static MenuPrincipal instance;
 
-    public static MenuPrincipal getInstance() {
-        if ( MenuPrincipal.instance == null ) {
-            return new MenuPrincipal();
-        } else {
-            return MenuPrincipal.instance;
-        }
+    private MenuPrincipal() {
     }
 
-    private MenuPrincipal() {}
+    public static MenuPrincipal getInstance() {
+        return Objects.requireNonNullElseGet(MenuPrincipal.instance, MenuPrincipal::new);
+    }
 
     public void display() {
         boolean debut = true;

@@ -14,14 +14,15 @@ public class MenuLancement {
 
     public MoteurInference moteurInference;
 
+    private MenuLancement() {
+    }
+
     public static synchronized MenuLancement getInstance() {
-        if ( MenuLancement.instance == null ) {
+        if (MenuLancement.instance == null) {
             MenuLancement.instance = new MenuLancement();
         }
         return MenuLancement.instance;
     }
-
-    private MenuLancement() {}
 
     public void display() {
         Scanner scanner = new Scanner(System.in);
@@ -35,7 +36,7 @@ public class MenuLancement {
 
             switch (choix) {
                 case "1":
-                    System.out.println("");
+                    System.out.println();
                     // Demander les chemins de fichiers à l'utilisateur
                     System.out.print("Veuillez entrer le chemin du fichier de règles : ");
                     String fichierRegles = scanner.nextLine();
@@ -62,18 +63,18 @@ public class MenuLancement {
 
                         System.out.println("---- Base Règles Initiale ----");
                         boolean paquetUtilise = BC.getBaseRegles().isPaquetUsed();
-                        for ( Regle regle : BC.getBaseRegles().listeTrieeParNumero()) {
+                        for (Regle regle : BC.getBaseRegles().listeTrieeParNumero()) {
                             System.out.println(regle.toString(paquetUtilise));
                         }
 
                         System.out.println("---- Base Faits Initiale ----");
-                        for ( Fait fait : BC.getBaseFaits()) {
+                        for (Fait fait : BC.getBaseFaits()) {
                             System.out.println(fait.toString());
                         }
 
-                        if ( !fichierCoherences.isEmpty() ) {
+                        if (!fichierCoherences.isEmpty()) {
                             System.out.println("---- Règles de cohérence ----");
-                            for ( String info : BC.getCoherence().getInfosCoherence() ) {
+                            for (String info : BC.getCoherence().getInfosCoherence()) {
                                 System.out.println(info);
                             }
                         }

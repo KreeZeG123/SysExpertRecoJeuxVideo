@@ -1,11 +1,10 @@
 package com.example.modele;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Valeur implements InterfaceValeur{
+public class Valeur implements InterfaceValeur {
 
-    private String valeur;
+    private final String valeur;
 
     public Valeur(String valeur) {
         this.valeur = valeur;
@@ -23,10 +22,6 @@ public class Valeur implements InterfaceValeur{
         } catch (NumberFormatException e) {
             return false; // En cas d'erreur, la comparaison échoue
         }
-    }
-
-    public String getValeur() {
-        return valeur;
     }
 
     @Override

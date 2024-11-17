@@ -2,6 +2,7 @@ package com.example.menu;
 
 import com.example.modele.BaseConnaissances;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 public class MenuParametres {
@@ -10,22 +11,19 @@ public class MenuParametres {
 
     private static MenuParametres instance;
 
-    public static MenuParametres getInstance() {
-        if ( MenuParametres.instance == null ) {
-            return new MenuParametres();
-        } else {
-            return MenuParametres.instance;
-        }
+    private MenuParametres() {
     }
 
-    private MenuParametres() {}
+    public static MenuParametres getInstance() {
+        return Objects.requireNonNullElseGet(MenuParametres.instance, MenuParametres::new);
+    }
 
     public void display() {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
             System.out.println("\n==== Menu Paramètres ====");
-            System.out.println("1 - "+obtenirOptionSelectionnee()+" Groupement des règles par paquets");
+            System.out.println("1 - " + obtenirOptionSelectionnee() + " Groupement des règles par paquets");
             System.out.println("2 - Choisir critère de sélection de règle");
             System.out.println("3 - Définir Explication");
             System.out.println("4 - Retour au menu principal");
@@ -37,7 +35,7 @@ public class MenuParametres {
             switch (choix) {
                 case 1:
                     BaseConnaissances BC = MenuLancement.getInstance().getMoteurInference().getBC();
-                    if ( !optionsSelecionnee ) {
+                    if (!optionsSelecionnee) {
                         BC.getBaseRegles().groupementParPaquet = true;
                         System.out.println("\nGroupement des règles par paquets sélectionné.");
                     } else {

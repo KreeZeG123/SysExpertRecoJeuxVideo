@@ -8,7 +8,6 @@ public class MoteurInference {
 
     private List<Explication> explications;
 
-    // Temporaire
     private int nivExplication = 1;
 
     public MoteurInference(BaseConnaissances BC) {
@@ -17,7 +16,6 @@ public class MoteurInference {
     }
 
     public BaseFaits chainageAvant() throws CloneNotSupportedException {
-        int nbinf = 0;
         int nbIteration = 0;
         boolean stop = false;
         this.explications.clear();
@@ -27,16 +25,15 @@ public class MoteurInference {
         BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
 
         // Vérification des incohérences crée par les règles de monovaluation sur la base de fait
-        if ( this.BC.verifierCoherenceFaitMonoValue() ) {
-            System.out.println("\nUne ou plusieurs incohérences on été détectées dans la base fait !");
+        if (this.BC.verifierCoherenceFaitMonoValue()) {
+            System.out.println("\nUne ou plusieurs incohérences ont été détectées dans la base de faits !");
             System.out.print("Souhaitez vous continuez l'inférence (oui/non) : ");
 
             Scanner scanner = new Scanner(System.in);
             if (scanner.nextLine().contains("non")) {
                 stop = true;
-                System.out.println("\nL'inférence a été arrêté, voici la base de connaissance lors de l'arrêt :\n");
-            }
-            else {
+                System.out.println("\nL'inférence a été arrêtée, voici la base de connaissance lors de l'arrêt :\n");
+            } else {
                 System.out.println();
             }
         }
@@ -47,8 +44,8 @@ public class MoteurInference {
             boolean inf = true;
 
             BaseRegles ensembleRegles = BRparPaquet.get(indicePaquet);
-            if ( ensembleRegles.groupementParPaquet ) {
-                System.out.println("Inférence sur le paquet ["+ensembleRegles.getRegles().get(0).getPaquet()+"]\n");
+            if (ensembleRegles.groupementParPaquet) {
+                System.out.println("Inférence sur le paquet [" + ensembleRegles.getRegles().get(0).getPaquet() + "]\n");
             }
 
             // Ensembles pour les règles à supprimer et les faits à ajouter
@@ -76,7 +73,6 @@ public class MoteurInference {
                     if (declanchable) {
                         inf = true;               // Marque qu'une inférence a eu lieu
                         regleSupprimable.add(r);
-                        nbinf++;
 
                         // Vérifie la cohérence de la règle avant de l'appliquer
                         if (r.estCoherent(BF, BC)) {
@@ -88,13 +84,13 @@ public class MoteurInference {
                         } else {
                             // Gérer une incohérence détectée et demander confirmation pour continuer
                             System.out.println("Attention : Incohérence detectée via la règle \"" + r.toString() + "\"");
-                            System.out.print("Souhaitez vous continuez l'inférence (oui/non) : ");
+                            System.out.print("Souhaitez-vous continuer l'inférence (oui/non) : ");
 
                             Scanner scanner = new Scanner(System.in);
                             if (scanner.nextLine().contains("non")) {
                                 inf = false;
                                 stop = true;
-                                System.out.println("\nL'inférence a été arrêté, voici la base de connaissance lors de l'arrêt :\n");
+                                System.out.println("\nL'inférence a été arrêtée, voici la base de connaissances lors de l'arrêt :\n");
                                 break;
                             } else {
                                 System.out.println();
@@ -133,15 +129,13 @@ public class MoteurInference {
         switch (nivExplication) {
             case 1 -> {
                 System.out.println("----- Trace Complete -----");
-                for (int i = 0; i < this.explications.size(); i++) {
-                    Explication explication = this.explications.get(i);
+                for (Explication explication : this.explications) {
                     System.out.println("Iteration " + explication.getNumInference() + " - " + explication.getRegle().toString());
                 }
             }
             case 2 -> {
-                System.out.println("----- Trace Abrégées -----");
-                for (int i = 0; i < this.explications.size(); i++) {
-                    Explication explication = this.explications.get(i);
+                System.out.println("----- Trace Abrégée -----");
+                for (Explication explication : this.explications) {
                     System.out.println("Iteration " + explication.getNumInference() + " - " + explication.getRegle().toStringNumRegle());
                 }
             }
@@ -192,19 +186,6 @@ public class MoteurInference {
         return false;
     }
 
-
-    public void modifierGroupementPaquet(boolean etat) {
-
-    }
-
-    public void modifierChoixRegle(String choix) {
-
-    }
-
-    public void modifierModeExplication(String mode) {
-
-    }
-
     public int getNivExplication() {
         return nivExplication;
     }
@@ -217,12 +198,4 @@ public class MoteurInference {
         return BC;
     }
 
-    public void test() throws CloneNotSupportedException {
-        BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
-        BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
-
-        for (Regle r : BR) {
-            System.out.println(r.toString());
-        }
-    }
 }
