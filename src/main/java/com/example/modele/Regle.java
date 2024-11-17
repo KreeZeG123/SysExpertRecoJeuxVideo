@@ -1,8 +1,8 @@
 package com.example.modele;
 
+import com.example.modele.enumeration.TypeAttribut;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Regle {
@@ -12,6 +12,8 @@ public class Regle {
 
     private String nom;
 
+    private String paquet;
+
     private BaseRegles baseRegles;
 
     public Regle(BaseRegles baseRegles,Premisse premisse,Consequent consequent,String nom) {
@@ -19,6 +21,23 @@ public class Regle {
         this.premisse = premisse;
         this.consequent = consequent;
         this.nom = nom;
+        this.paquet = "?";
+    }
+
+    public Regle(BaseRegles baseRegles,Premisse premisse,Consequent consequent,String nom, String paquet) {
+        this.baseRegles = baseRegles;
+        this.premisse = premisse;
+        this.consequent = consequent;
+        this.nom = nom;
+        this.paquet = paquet;
+    }
+
+    public void setPaquet(String paquet) {
+        this.paquet = paquet;
+    }
+
+    public String getPaquet() {
+        return paquet;
     }
 
     public boolean regleApplicable(){
@@ -41,9 +60,38 @@ public class Regle {
         return consequent;
     }
 
+    public void setBaseRegles(BaseRegles baseRegles) {
+        this.baseRegles = baseRegles;
+    }
+
+    public BaseRegles getBaseRegles() {
+        return baseRegles;
+    }
+
     @Override
     public String toString() {
-        return nom +
+        String paquetStr = "";
+        if ( this.baseRegles != null &&
+             this.baseRegles.getBC() != null &&
+             this.baseRegles.groupementParPaquet
+        ) {
+            paquetStr = "["+paquet+"] ";
+        }
+        return paquetStr +
+                nom +
+                " : " +
+                premisse.toString() +
+                " => " +
+                consequent.toString();
+    }
+
+    public String toString(boolean paquetUsed) {
+        String paquetStr = "";
+        if ( paquetUsed ) {
+            paquetStr = "["+paquet+"] ";
+        }
+        return paquetStr +
+                nom +
                 " : " +
                 premisse.toString() +
                 " => " +
@@ -62,5 +110,28 @@ public class Regle {
 
     public int getNombreDePremisses() {
         return this.premisse.getElements().size();
+    }
+
+    public boolean estCoherent(BaseFaits BF, BaseConnaissances BC) {
+        List<Element> elements = new ArrayList<>(this.consequent.getElements());
+        for (Element e : elements) {;
+            String attribut = e.getMot();
+            Valeur valeur = e.getValeur();
+            // Detection d'une règle d'incohérence
+            if (attribut.contains("INCOHERENT") ) {
+                return false;
+            }
+            // Detection de fait avec d'autres valeurs alors que l'attribut est monovalué
+            if (BC.getCoherence().obtenirTypeAttribut(attribut) == TypeAttribut.MONO) {
+                Fait faitRecherchee = BF.contientAttribut(attribut);
+                boolean erreurMonovaluation = (faitRecherchee != null) && !(valeur.equals(faitRecherchee.getValeur()));
+                if ( erreurMonovaluation ) {
+                    System.out.println("Attention : L'attribut monovalué \""+attribut+"\" a plusieurs valeurs en meme temps");
+                }
+                return !erreurMonovaluation;
+            }
+        }
+
+        return true;
     }
 }

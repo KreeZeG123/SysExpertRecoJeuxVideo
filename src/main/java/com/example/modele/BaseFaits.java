@@ -30,8 +30,19 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
         return element.getNegation();
     }
 
+    public boolean contient(List<Element> elements){
+        Iterator<Element> iterator = elements.iterator();
+        boolean contient = true;
+        while(iterator.hasNext() && contient){
+            contient = this.contient(iterator.next());
+        }
+        return contient;
+    }
+
     public BaseFaits ajouterFait(Fait fait) {
-        this.faits.add(fait);
+        if ( !this.faits.contains(fait) ) {
+            this.faits.add(fait);
+        }
         return this;
     }
 
@@ -76,4 +87,23 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
     public Iterator<Fait> iterator() {
         return this.faits.iterator();
     }
+
+    public Fait contientAttribut(String mot) {
+        for (Fait fait : faits) {
+            if (fait.getMot().equals(mot)) {
+                return fait;
+            }
+        }
+        return null;
+    }
+
+    public HashMap<String, Integer> listerOccurencesAttributs() {
+        HashMap<String, Integer> occurencesAttributs = new HashMap<>();
+        for (Fait fait : faits) {
+            int oldValue = occurencesAttributs.getOrDefault(fait.getMot(), 0);
+            occurencesAttributs.put(fait.getMot(),oldValue + 1);
+        }
+        return occurencesAttributs;
+    }
+
 }

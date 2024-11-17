@@ -5,4 +5,8 @@ public class Consequent extends Premisse{
     public Consequent(Element e) {
         super(e);
     }
+
+    public Consequent() {
+        super();
+    }
 }

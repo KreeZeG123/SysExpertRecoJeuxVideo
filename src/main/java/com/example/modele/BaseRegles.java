@@ -11,8 +11,23 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
 
     private BaseConnaissances BC = null;
 
+    public boolean groupementParPaquet = false;
+
     public BaseRegles() {
         this.regles = new ArrayList<>();
+    }
+
+    public BaseRegles(boolean groupementParPaquet) {
+        this.regles = new ArrayList<>();
+        this.groupementParPaquet = groupementParPaquet;
+    }
+
+    public List<Regle> getRegles() {
+        return regles;
+    }
+
+    public BaseConnaissances getBC() {
+        return BC;
     }
 
     public void setBC(BaseConnaissances BC) {
@@ -21,6 +36,10 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
 
     public void ajouterRegle(Regle regle) {
         regles.add(regle);
+    }
+
+    public void ajouterRegle(List<Regle> regles) {
+        this.regles.addAll(regles);
     }
 
     public void supprimerRegle(Regle regle) {
@@ -48,6 +67,11 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
                 }
             }
         }
+    }
+
+    public BaseRegles ajouterRegle(Premisse antecedent, Consequent consequent){
+        regles.add(new Regle(this, antecedent, consequent, "R?"));
+        return this;
     }
 
     public int tailleBr() {
@@ -93,5 +117,86 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
         }
         // Si la règle ne suit pas le format "R"+nombre
         return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseRegles{" +
+                "regles=" + regles +
+                ", BC=" + BC +
+                ", groupementParPaquet=" + groupementParPaquet +
+                '}';
+    }
+
+    public List<BaseRegles> getBrParPaquet() {
+
+        if ( this.BC != null && !this.groupementParPaquet ) {
+            return List.of(this);
+        }
+
+        // Map pour regrouper les règles par paquet
+        Map<String, List<Regle>> reglesParPaquet = new HashMap<>();
+
+        // Parcourir les règles et les organiser par paquet
+        for (Regle regle : this.regles) {
+            String paquet = regle.getPaquet();
+
+            // Si le paquet n'existe pas encore dans la Map, on crée une nouvelle liste
+            reglesParPaquet.computeIfAbsent(paquet, k -> new ArrayList<>()).add(regle);
+        }
+
+        // Créer la liste de BaseRegles pour chaque paquet
+        List<BaseRegles> baseReglesParPaquet = new ArrayList<>();
+        for (Map.Entry<String, List<Regle>> entry : reglesParPaquet.entrySet()) {
+            BaseRegles br = new BaseRegles(this.groupementParPaquet);
+            br.ajouterRegle(entry.getValue());
+            baseReglesParPaquet.add(br);
+        }
+
+        // Tri de la liste baseReglesParPaquet selon les règles spécifiées
+        baseReglesParPaquet.sort(new Comparator<BaseRegles>() {
+            @Override
+            public int compare(BaseRegles br1, BaseRegles br2) {
+                String paquet1 = br1.getRegles().get(0).getPaquet();
+                String paquet2 = br2.getRegles().get(0).getPaquet();
+
+                // Détection du type de paquet
+                boolean isNumeric1 = paquet1.matches("\\d+");
+                boolean isAlpha1 = paquet1.matches("[a-zA-Z]+");
+                boolean isNumeric2 = paquet2.matches("\\d+");
+                boolean isAlpha2 = paquet2.matches("[a-zA-Z]+");
+
+                // Si les deux paquets sont numériques, on les compare numériquement
+                if (isNumeric1 && isNumeric2) {
+                    return Integer.compare(Integer.parseInt(paquet1), Integer.parseInt(paquet2));
+                }
+                // Si l'un est numérique et l'autre ne l'est pas, on priorise le numérique
+                if (isNumeric1) return -1;
+                if (isNumeric2) return 1;
+
+                // Si les deux paquets sont alphabétiques, on les compare alphabétiquement
+                if (isAlpha1 && isAlpha2) {
+                    return paquet1.compareToIgnoreCase(paquet2);
+                }
+                // Si l'un est alphabétique et l'autre non, on priorise l'alphabétique
+                if (isAlpha1) return -1;
+                if (isAlpha2) return 1;
+
+                // Comparaison alphabétique des symboles pour le reste
+                return paquet1.compareTo(paquet2);
+            }
+        });
+
+        return baseReglesParPaquet;
+    }
+
+    public boolean isPaquetUsed() {
+        boolean paquetUsed = false;
+        for (Regle regle : this.regles) {
+            if ( regle.getPaquet() != null & !regle.getPaquet().contains("?") ) {
+                paquetUsed = true;
+            }
+        }
+        return paquetUsed;
     }
 }

@@ -62,14 +62,23 @@ public class MenuLancement {
                         SourceScanner.detecterValeursSimilaires(BC);
 
                         System.out.println("---- Base Règles Initiale ----");
+                        boolean paquetUtilise = BC.getBaseRegles().isPaquetUsed();
                         for ( Regle regle : BC.getBaseRegles().listeTrieeParNumero()) {
-                            System.out.println(regle.toString());
+                            System.out.println(regle.toString(paquetUtilise));
                         }
 
                         System.out.println("---- Base Faits Initiale ----");
                         for ( Fait fait : BC.getBaseFaits()) {
                             System.out.println(fait.toString());
                         }
+
+                        if ( !fichierCoherences.isEmpty() ) {
+                            System.out.println("---- Règles de cohérence ----");
+                            for ( String info : BC.getCoherence().getInfosCoherence() ) {
+                                System.out.println(info);
+                            }
+                        }
+
                         System.out.println("-----------------------------");
 
                         this.moteurInference = new MoteurInference(BC);

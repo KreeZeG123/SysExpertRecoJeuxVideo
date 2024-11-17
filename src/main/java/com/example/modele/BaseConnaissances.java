@@ -1,18 +1,24 @@
 package com.example.modele;
 
 import com.example.modele.enumeration.ChoixRegle;
+import com.example.modele.enumeration.TypeAttribut;
+
+import java.util.*;
 
 public class BaseConnaissances {
 
-    private BaseRegles baseRegles;
+    private final BaseRegles baseRegles;
 
-    private BaseFaits baseFaits;
+    private final BaseFaits baseFaits;
+
+    private final Coherence coherence;
 
     public ChoixRegle choixRegle = ChoixRegle.PLUS_DE_PREMISSES;
 
     public BaseConnaissances(BaseRegles baseRegles, BaseFaits baseFaits) {
         this.baseRegles = baseRegles;
         this.baseFaits = baseFaits;
+        this.coherence = new Coherence(this);
 
         if (baseRegles != null) {
             this.baseRegles.setBC(this);
@@ -25,5 +31,24 @@ public class BaseConnaissances {
 
     public BaseFaits getBaseFaits() {
         return baseFaits;
+    }
+
+    public Coherence getCoherence() {
+        return coherence;
+    }
+
+    public boolean verifierCoherenceFaitMonoValue() {
+        HashMap<String, Integer> occurencesAttributs = this.getBaseFaits().listerOccurencesAttributs();
+        boolean incoherence = false;
+        for (String attribut : this.getCoherence().getAttributsMono() ) {
+            if (occurencesAttributs.containsKey(attribut)) {
+                Integer occurences = occurencesAttributs.get(attribut);
+                if ( occurences > 1) {
+                    System.out.println("Attention : L'attribut monovalué \""+attribut+"\" a plusieurs valeurs en meme temps");
+                    incoherence = true;
+                }
+            }
+        }
+        return incoherence;
     }
 }

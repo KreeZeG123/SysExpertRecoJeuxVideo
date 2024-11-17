@@ -28,10 +28,21 @@ public class SourceScanner {
             return null;
         }
 
+        // Création de la base de connaissance
+        BaseConnaissances BC = new BaseConnaissances(BR,BF);
+
         // Chargement Règles de Cohérences
+        if ( !cheminCoherences.isEmpty() ) {
+            try {
+                chargerFichierCoherence(cheminCoherences, BC);
+            } catch (IOException e) {
+                System.out.println("Erreur : Le fichier de cohérence "+cheminCoherences+" n'a pas pu être chargé !");
+                return null;
+            }
+        }
 
         // Création de la Base de Connaissance
-        return new BaseConnaissances(BR,BF);
+        return BC;
     }
 
     public static BaseRegles chargerFichierRegles(String cheminFichier) throws IOException {
@@ -73,6 +84,28 @@ public class SourceScanner {
 
         // Retourne la base de faits
         return BF;
+    }
+
+    private static void chargerFichierCoherence(String cheminFichier, BaseConnaissances BC) throws IOException {
+        // Ouvre le fichier de faits
+        List<String>[] coherencesSrc = lireFichier(cheminFichier);
+
+        for (int i = 0; i < coherencesSrc[1].size(); i++) {
+            String numLigne = coherencesSrc[0].get(i);
+            String coherenceSrc = coherencesSrc[1].get(i);
+            try {
+                if (coherenceSrc.contains("MONO") || coherenceSrc.contains("MULTI")) {
+                    ExtracteurSource.extraireTypeAttributCoherence(coherenceSrc, BC);
+                    BC.getCoherence().ajouterInformation(coherenceSrc);
+                }
+                else {
+                    BC.getBaseRegles().ajouterRegle(ExtracteurSource.extraireRegle(coherenceSrc,BC.getBaseRegles()));
+                    BC.getCoherence().ajouterInformation(coherenceSrc);
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("ligne "+numLigne+" : "+ e.getMessage());
+            }
+        }
     }
 
     // Méthode pour lire un fichier et retourner les lignes nettoyées

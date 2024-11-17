@@ -1,0 +1,34 @@
+# Déduction de caractéristiques générales depuis les faits de base
+1 : Age(<18) -> TypeJoueur(Familial)
+1 : Age(>=18) -> TypeJoueur(Hardcore)
+
+1 : Multijoueur(Oui) -> Style(Competitif)
+1 : Multijoueur(Non) -> Style(Solo)
+
+1 : Plateforme(Switch) -> TypeJoueur(Familial)
+1 : Plateforme(PC) -> TypeJoueur(Creatif)
+1 : Plateforme(PS5) -> TypeJoueur(Hardcore)
+
+1 : Difficulte(Facile) -> Style(Detente)
+1 : Difficulte(Difficile) -> Style(Defi)
+
+# Déduction d'attributs intermédiaires depuis les caractéristiques générales
+2 : TypeJoueur(Familial) -> PrefGenre(Simulation)
+2 : TypeJoueur(Hardcore) -> PrefGenre(Action)
+
+2 : Style(Competitif) -> PrefMultijoueur(Oui)
+2 : Style(Solo) -> PrefMultijoueur(Non)
+
+2 : Style(Detente) -> PrefGenre(Aventure)
+2 : Style(Defi) -> PrefGenre(RolePlaying)
+
+# Recommandation finale basée sur les attributs intermédiaires
+3 : PrefGenre(Simulation) -> Recommande(Sims)
+3 : PrefGenre(Action) -> Recommande(CallOfDuty)
+
+3 : PrefMultijoueur(Oui) -> Recommande(ApexLegends)
+3 : PrefMultijoueur(Non) -> Recommande(Skyrim)
+
+3 : PrefGenre(Aventure) -> Recommande(Zelda)
+3 : PrefGenre(RolePlaying) -> Recommande(Witcher3)
+

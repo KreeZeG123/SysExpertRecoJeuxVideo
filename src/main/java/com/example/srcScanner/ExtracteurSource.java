@@ -1,6 +1,7 @@
 package com.example.srcScanner;
 
 import com.example.modele.*;
+import com.example.modele.enumeration.TypeAttribut;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -8,11 +9,20 @@ import java.util.Arrays;
 public class ExtracteurSource {
 
     public static Regle extraireRegle(String line, BaseRegles BR) throws IllegalArgumentException {
+        // Vérifie si nous avons un paque de spécifié
+        String paquet = "?";
+        String lineRegle = line;
+        if ( line.contains(":") ) {
+            String[] splitPaquet = line.split(":");
+            paquet = splitPaquet[0];
+            lineRegle = splitPaquet[1];
+        }
+
         // Split prémisses et conséquent
         if (!line.contains("->")) {
             throw new IllegalArgumentException("La ligne doit contenir une flèche (->) pour séparer les prémisses et le conséquent.");
         }
-        String[] splitFleche = line.split("->",-1);
+        String[] splitFleche = lineRegle.split("->",-1);
         // Vérifie que nous avons bien deux parties après la séparation
         if (splitFleche.length != 2) {
             throw new IllegalArgumentException("La ligne doit contenir une partie prémisses et une partie conséquent.");
@@ -28,10 +38,19 @@ public class ExtracteurSource {
             throw new IllegalArgumentException("La partie conséquent ne doit pas être vide.");
         }
 
-        // Création du conséquent
-        Consequent consequent = new Consequent(
-                ExtracteurSource.extraireElement(consequentStr)
-        );
+        // Split éléments conséquents
+        String[] consequentArray = consequentStr.split(",",-1);
+
+        // Création des conséquents
+        Consequent consequent = new Consequent();
+        for (String elementStr : consequentArray) {
+            if ( !elementStr.isEmpty()) {
+                consequent.ajouterElement(ExtracteurSource.extraireElement(elementStr));
+            }
+            else {
+                throw new IllegalArgumentException("Un element est vide après une virgule dans la partie conséquent !");
+            }
+        }
 
         // Split éléments prémisses
         String[] premisseArray = premisseStr.split(",",-1);
@@ -51,6 +70,7 @@ public class ExtracteurSource {
         String nomRegle = "R?";
         if ( BR != null) {
             nomRegle = "R"+BR.tailleBr();
+
         }
 
         // Création de la règle (lst prémisses + conséquent)
@@ -58,7 +78,8 @@ public class ExtracteurSource {
                 BR,
                 premisse,
                 consequent,
-                nomRegle
+                nomRegle,
+                paquet
         );
     }
 
@@ -113,7 +134,7 @@ public class ExtracteurSource {
     }
 
     public static Fait extraireFait(String faitStrSrc) throws IllegalArgumentException {
-        // Verifie si il y a un seul élement sur un ligne et pas de ','
+        // Vérifie s'il y a un seul élement sur une ligne et pas de ','
         if ( faitStrSrc.contains(",") ) {
             throw new IllegalArgumentException("Le fait '" + faitStrSrc + "' ne doit pas contenir plus d'un element ou un caractères ',' dans la chaîne.");
         }
@@ -124,4 +145,40 @@ public class ExtracteurSource {
         // Création du fait
         return new Fait(element);
     }
+
+    public static void extraireTypeAttributCoherence(String coherenceStrSrc, BaseConnaissances BC) throws IllegalArgumentException {
+        // Vérification de la présence de parenthèses
+        if (!coherenceStrSrc.contains("(") || !coherenceStrSrc.endsWith(")")) {
+            throw new IllegalArgumentException("La chaîne doit contenir une parenthèse ouvrante '(' et se terminer par une parenthèse fermante ')'.");
+        }
+
+        // Vérification du type (MONO ou MULTI)
+        TypeAttribut type;
+        if (coherenceStrSrc.startsWith("MONO(")) {
+            type = TypeAttribut.MONO;
+        } else if (coherenceStrSrc.startsWith("MULTI(")) {
+            type = TypeAttribut.MULTI;
+        } else {
+            throw new IllegalArgumentException("La chaîne doit commencer par 'MONO(' ou 'MULTI('.");
+        }
+
+        // Extraction du nom de l'attribut entre les parenthèses
+        String motAttribut = coherenceStrSrc.substring(coherenceStrSrc.indexOf('(') + 1, coherenceStrSrc.length() - 1).trim();
+
+        // Vérifie que le nom de l'attribut n'est pas vide
+        if (motAttribut.isEmpty()) {
+            throw new IllegalArgumentException("Le nom de l'attribut entre parenthèses ne doit pas être vide.");
+        }
+
+        // Gestion de l'attribut "ALL" ou d'un attribut spécifique
+        if ("ALL".equalsIgnoreCase(motAttribut)) {
+            // Applique le type à tous les attributs
+            BC.getCoherence().setAll(type);
+        } else {
+            // Applique le type à un attribut spécifique
+            BC.getCoherence().ajouterTypeAttribut(motAttribut, type);
+        }
+    }
+
+
 }
