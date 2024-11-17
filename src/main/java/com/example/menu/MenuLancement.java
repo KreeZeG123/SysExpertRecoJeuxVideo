@@ -61,8 +61,9 @@ public class MenuLancement {
                         SourceScanner.detecterValeursSimilaires(BC);
 
                         System.out.println("---- Base Règles Initiale ----");
+                        boolean paquetUtilise = BC.getBaseRegles().isPaquetUsed();
                         for ( Regle regle : BC.getBaseRegles().listeTrieeParNumero()) {
-                            System.out.println(regle.toString());
+                            System.out.println(regle.toString(paquetUtilise));
                         }
 
                         System.out.println("---- Base Faits Initiale ----");

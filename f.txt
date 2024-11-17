@@ -1,1 +1,2 @@
-FaciliteLangue(true)
+Slave(true)
+Responsabilite(true)

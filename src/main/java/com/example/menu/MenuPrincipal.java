@@ -26,6 +26,7 @@ public class MenuPrincipal {
                 System.out.println("Par Défaut :");
                 System.out.println(" - Critère sélectionné : règle ayant le plus de prémisses à satisfaire.");
                 System.out.println(" - Explication sélectionnée : sous forme de traces complètes.");
+                System.out.println(" - Groupement des règles par paquets : désactivé.");
                 System.out.println("------------------------");
                 debut = false;
             }

@@ -17,69 +17,112 @@ public class MoteurInference {
     }
 
     public BaseFaits chainageAvant() throws CloneNotSupportedException {
-        boolean inf = true;
         int nbinf = 0;
         int nbIteration = 0;
-
-        BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
-        BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
+        boolean stop = false;
         this.explications.clear();
 
-        // Boucle qui fait des inférences jusqu'à saturer la BF
-        Set<Regle> regleSupprimable = new HashSet<Regle>();
-        Set<Consequent> consequentsAjoutable = new HashSet<>();
-        while (inf) {
-            inf = false;
-            // Parcoure les règles de la BR
-            for (Regle r : BR) {
-                boolean declanchable = true;
-                int indiceAntecedant = 0;
-                List<Element> antecedant = r.getAntecedants();
-                // Vérifie si une règle est déclenchable
-                for (int i = 0; i < antecedant.size() && declanchable; i++) {
-                    if (!BF.contient(antecedant.get(i))) {
-                        declanchable = false;
-                    }
-                }
-                // Applique la règle si elle est déclancheable
-                if (declanchable) {
-                    regleSupprimable.add(r);
-                    inf = true;
-                    nbinf++;
-                    if (r.estCoherent(BF, BC)) {
-                        consequentsAjoutable.add(r.getConsequent());
-                        if (nivExplication > 0) {
-                            this.explications.add(new Explication(nbIteration, r));
-                        }
-                    } else {
-                        System.out.println("Attention : Incohérence detectée via la règle \"" + r.toString() + "\"");
-                        System.out.print("Souhaitez vous continuez l'inférence (oui/non) : ");
-                        Scanner scanner = new Scanner(System.in);
-                        if (scanner.nextLine().contains("non")) {
-                            inf = false;
-                            System.out.println("\nL'inférence a été arrêté, voici la base de connaisance lors de l'arrêt :\n");
-                        } else {
-                            System.out.println();
+        // Cloner la base de règles et la base de faits pour éviter les modifications directes
+        BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
+        BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
+
+        // Vérification des incohérences crée par les règles de monovaluation sur la base de fait
+        if ( this.BC.verifierCoherenceFaitMonoValue() ) {
+            System.out.println("\nUne ou plusieurs incohérences on été détectées dans la base fait !");
+            System.out.print("Souhaitez vous continuez l'inférence (oui/non) : ");
+
+            Scanner scanner = new Scanner(System.in);
+            if (scanner.nextLine().contains("non")) {
+                stop = true;
+                System.out.println("\nL'inférence a été arrêté, voici la base de connaissance lors de l'arrêt :\n");
+            }
+            else {
+                System.out.println();
+            }
+        }
+
+        // Parcourt des différents groupes de règles
+        List<BaseRegles> BRparPaquet = BR.getBrParPaquet();
+        for (int indicePaquet = 0; indicePaquet < BRparPaquet.size() && !stop; indicePaquet++) {
+            boolean inf = true;
+
+            BaseRegles ensembleRegles = BRparPaquet.get(indicePaquet);
+            if ( ensembleRegles.groupementParPaquet ) {
+                System.out.println("Inférence sur le paquet ["+ensembleRegles.getRegles().get(0).getPaquet()+"]\n");
+            }
+
+            // Ensembles pour les règles à supprimer et les faits à ajouter
+            Set<Regle> regleSupprimable = new HashSet<Regle>();
+            Set<Consequent> consequentsAjoutable = new HashSet<>();
+
+            // Boucle d'inférence jusqu'à saturation de la BF
+            while (inf && !stop) {
+                inf = false;
+
+                // Parcoure les règles de l'ensemble de regles
+                for (Regle r : ensembleRegles) {
+                    boolean declanchable = true;
+
+                    // Vérifie si une règle est déclenchable
+                    List<Element> antecedant = r.getAntecedants();
+                    for (int indiceAntecedant = 0; indiceAntecedant < antecedant.size() && declanchable; indiceAntecedant++) {
+                        if (!BF.contient(antecedant.get(indiceAntecedant))) {
+                            declanchable = false;
+                            break;
                         }
                     }
 
+                    // Applique la règle si elle est déclancheable
+                    if (declanchable) {
+                        inf = true;               // Marque qu'une inférence a eu lieu
+                        regleSupprimable.add(r);
+                        nbinf++;
+
+                        // Vérifie la cohérence de la règle avant de l'appliquer
+                        if (r.estCoherent(BF, BC)) {
+                            consequentsAjoutable.add(r.getConsequent());
+                            // Ajoute l'explication si le niveau d'explication est activé
+                            if (nivExplication > 0) {
+                                this.explications.add(new Explication(nbIteration, r));
+                            }
+                        } else {
+                            // Gérer une incohérence détectée et demander confirmation pour continuer
+                            System.out.println("Attention : Incohérence detectée via la règle \"" + r.toString() + "\"");
+                            System.out.print("Souhaitez vous continuez l'inférence (oui/non) : ");
+
+                            Scanner scanner = new Scanner(System.in);
+                            if (scanner.nextLine().contains("non")) {
+                                inf = false;
+                                stop = true;
+                                System.out.println("\nL'inférence a été arrêté, voici la base de connaissance lors de l'arrêt :\n");
+                                break;
+                            } else {
+                                System.out.println();
+                            }
+                        }
+
+                    }
+
                 }
-            }
-            // Ajouter les nouveaux faits à la BF
-            if (!consequentsAjoutable.isEmpty()) {
-                for (Consequent c : consequentsAjoutable) {
-                    BF.ajouterFait(c);
+
+                // Ajouter les nouveaux faits à la BF
+                if (!consequentsAjoutable.isEmpty()) {
+                    for (Consequent c : consequentsAjoutable) {
+                        BF.ajouterFait(c);
+                    }
+                    consequentsAjoutable.clear();
                 }
-                consequentsAjoutable.clear();
-            }
-            // Supprimer les règles déja appliquée de la BR
-            if (!regleSupprimable.isEmpty()) {
-                for (Regle r : regleSupprimable) {
-                    BR.supprimerRegle(r);
+
+                // Supprimer les règles déja appliquée de la BR
+                if (!regleSupprimable.isEmpty()) {
+                    for (Regle r : regleSupprimable) {
+                        ensembleRegles.supprimerRegle(r);
+                    }
+                    regleSupprimable.clear();
                 }
-                regleSupprimable.clear();
+
+                nbIteration++;
             }
-            nbIteration++;
         }
 
         return BF;

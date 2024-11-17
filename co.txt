@@ -1,0 +1,34 @@
+# Attribut Mono-Valués
+MONO(Age)
+MONO(Plateforme)
+MONO(TypeJoueur)
+MONO(Difficulte)
+
+# Attribut Multi-Valués
+MULTI(Style)
+MULTI(PrefGenre)
+MULTI(Recommande)
+
+# Un joueur ne peut être à la fois "Familial" et "Hardcore"
+TypeJoueur(Familial), TypeJoueur(Hardcore) -> INCOHERENT(anyValue)
+
+# Un style ne peut être à la fois "Détente" et "Défi"
+Style(Detente), Style(Defi) -> INCOHERENT(anyValue)
+
+# Un joueur ne peut préférer à la fois le "Solo" et le "Compétitif"
+Style(Solo), Style(Competitif) -> INCOHERENT(anyValue)
+
+# Les préférences graphiques "Retro" et "Modern" ne peuvent coexister
+Graphismes(Retro), Graphismes(Modern) -> INCOHERENT(anyValue)
+
+# Un joueur ne peut préférer simultanément les genres "Simulation" et "Action"
+PrefGenre(Simulation), PrefGenre(Action) -> INCOHERENT(anyValue)
+
+# Un joueur ne peut préférer simultanément "Multijoueur(Oui)" et "Multijoueur(Non)"
+PrefMultijoueur(Oui), PrefMultijoueur(Non) -> INCOHERENT(anyValue)
+
+# Un jeu à difficulté "Facile" ne peut être "DarkSouls"
+Difficulte(Facile), Recommande(DarkSouls) -> INCOHERENT(anyValue)
+
+# Si un joueur est "TypeJoueur(Familial)" et "Style(Defi)", cela est incohérent
+TypeJoueur(Familial), Style(Defi) -> INCOHERENT(anyValue)
