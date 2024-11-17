@@ -36,9 +36,6 @@ public class MenuActions {
             switch (choix) {
                 case 1:
                     System.out.println("\nExécution du chainage avant ...\n");
-
-
-
                     try {
                         BaseFaits result = moteurInference.chainageAvant();
                         moteurInference.afficherTrace(moteurInference.getNivExplication());
@@ -57,7 +54,7 @@ public class MenuActions {
                         b.ajouterElement(new Element("Allemand", new Valeur("false"), false));
                         boolean result = moteurInference.chainageArriere(b);
                         moteurInference.afficherTrace(moteurInference.getNivExplication());
-                        System.out.println("---- Resultat ----");
+                        System.out.println("\n---- Resultat ----");
                         if(result){
                             System.out.println("La prémisse " + b +" est demandable");
                         }else{

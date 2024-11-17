@@ -128,6 +128,7 @@ public class MoteurInference {
             if(!chainageArriereRecursif(e,BR,BF,0)) {
                 demandable = false;
             }
+
         }
         return demandable;
     }
@@ -136,11 +137,8 @@ public class MoteurInference {
         nbIteration++;
         Iterator<Regle> iterateurBR = BR.iterator();
         BaseFaits BFtemp= (BaseFaits) this.BC.getBaseFaits().clone();
-        if(BF.contient(b)){
-            System.out.println(b + "est déjà dans la BF");
+        if(BF.contient(b)) {
             return true;
-        }else{
-            System.out.println(b + " n'est pas dans la BF, on doit le rechercher\n");
         }
         //Deuxième cas : si b est demandable avec une règle
         while (iterateurBR.hasNext()) {
@@ -148,24 +146,33 @@ public class MoteurInference {
             Regle r = iterateurBR.next();
             //Si le consequent de r contient b, on regarde si l'antecedent est dans la BF. Si oui b est demandable sinon on cherche les antécédents de r
             if(r.getConsequent().contient(b)){
-                System.out.println("La regle " + r.toStringSansNomRegle() + " a pour consequent " + r.getConsequent().getElements().toString());
                 //Si la BF contient tous les antécédents
                 if(BF.contient(r.getAntecedants())) {
-                    System.out.println(b + " est demandable avec la regle " + r.toStringSansNomRegle() + "\n");
                     this.explications.add(new Explication(nbIteration, r));
                     return true;
                 }
                 //Si la BF ne contient pas tous les antécédents, on les cherche
                 else{
                     this.explications.add(new Explication(nbIteration, r));
+                    ArrayList<Boolean> antecedentsDemandable = new ArrayList<>();
+                    //On recherche si les antecedents de la regle sont demandables
                     for (Element e : r.getAntecedants()){
-                        System.out.println("On recherche si " + e + " est demandable\n");
-                        return chainageArriereRecursif(e, BR, BF, nbIteration);
+                        antecedentsDemandable.add(chainageArriereRecursif(e, BR, BF, nbIteration));
+                    }
+                    //On verifie si tous les antecedents de la regle sont demandables
+                    boolean allTrue = true;
+                    for(Boolean result : antecedentsDemandable){
+                        if(!result){
+                            allTrue = false;
+                            break;
+                        }
+                    }
+                    if(allTrue){
+                        return true;
                     }
                 }
             }
         }
-        System.out.println("Aucune règle permet de demander " + b);
         return false;
     }
 
