@@ -38,19 +38,8 @@ public class ExtracteurSource {
             throw new IllegalArgumentException("La partie conséquent ne doit pas être vide.");
         }
 
-        // Split éléments conséquents
-        String[] consequentArray = consequentStr.split(",",-1);
-
         // Création des conséquents
-        Consequent consequent = new Consequent();
-        for (String elementStr : consequentArray) {
-            if ( !elementStr.isEmpty()) {
-                consequent.ajouterElement(ExtracteurSource.extraireElement(elementStr));
-            }
-            else {
-                throw new IllegalArgumentException("Un element est vide après une virgule dans la partie conséquent !");
-            }
-        }
+        Consequent consequent = extraireConsequent(consequentStr);
 
         // Split éléments prémisses
         String[] premisseArray = premisseStr.split(",",-1);
@@ -180,5 +169,22 @@ public class ExtracteurSource {
         }
     }
 
+    public static Consequent extraireConsequent(String consequentStr) throws IllegalArgumentException {
+        // Split éléments conséquents
+        String[] consequentArray = consequentStr.split(",",-1);
+
+        // Création des conséquents
+        Consequent consequent = new Consequent();
+        for (String elementStr : consequentArray) {
+            if ( !elementStr.isEmpty()) {
+                consequent.ajouterElement(ExtracteurSource.extraireElement(elementStr));
+            }
+            else {
+                throw new IllegalArgumentException("Un element est vide après une virgule dans la partie conséquent !");
+            }
+        }
+
+        return consequent;
+    }
 
 }
