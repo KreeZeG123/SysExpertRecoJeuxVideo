@@ -1,6 +1,9 @@
 package com.example.modele;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class BaseFaits implements Cloneable, Iterable<Fait> {
 
@@ -10,19 +13,11 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
         this.faits = new ArrayList<>();
     }
 
-    public BaseFaits(List<Fait> faits) {
-        this.faits = faits;
-    }
-
-    public boolean contient(Fait fait) {
-        return faits.contains(fait);
-    }
-
     public boolean contient(Element element) {
         for (Fait fait : faits) {
             if (
-                fait.getMot().equals(element.getMot()) &&
-                fait.getValeur().equals(element.getValeur())
+                    fait.getMot().equals(element.getMot()) &&
+                            fait.getValeur().equals(element.getValeur())
             ) {
                 return element.getNegation() == fait.getNegation();
             }
@@ -30,10 +25,9 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
         return element.getNegation();
     }
 
-    public boolean contient(List<Element> elements){
-        Iterator<Element> iterator = elements.iterator();
-        for (Element e : elements){
-            if(!contient(e)){
+    public boolean contient(List<Element> elements) {
+        for (Element e : elements) {
+            if (!contient(e)) {
                 return false;
             }
         }
@@ -41,7 +35,7 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
     }
 
     public BaseFaits ajouterFait(Fait fait) {
-        if ( !this.faits.contains(fait) ) {
+        if (!this.faits.contains(fait)) {
             this.faits.add(fait);
         }
         return this;
@@ -51,6 +45,15 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
         for (Element element : consequent) {
             this.ajouterFait(new Fait(element));
         }
+    }
+
+    public HashMap<String, Integer> listerOccurencesAttributs() {
+        HashMap<String, Integer> occurencesAttributs = new HashMap<>();
+        for (Fait fait : faits) {
+            int oldValue = occurencesAttributs.getOrDefault(fait.getMot(), 0);
+            occurencesAttributs.put(fait.getMot(), oldValue + 1);
+        }
+        return occurencesAttributs;
     }
 
     public List<Fait> getFaits() {
@@ -98,13 +101,5 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
         return null;
     }
 
-    public HashMap<String, Integer> listerOccurencesAttributs() {
-        HashMap<String, Integer> occurencesAttributs = new HashMap<>();
-        for (Fait fait : faits) {
-            int oldValue = occurencesAttributs.getOrDefault(fait.getMot(), 0);
-            occurencesAttributs.put(fait.getMot(),oldValue + 1);
-        }
-        return occurencesAttributs;
-    }
 
 }

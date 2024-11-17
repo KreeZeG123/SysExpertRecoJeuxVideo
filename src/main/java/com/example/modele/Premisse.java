@@ -6,22 +6,14 @@ import java.util.List;
 
 public class Premisse implements Iterable<Element> {
     private List<Element> elements;
-    private BaseFaits baseFaits;
 
     public Premisse() {
         this.elements = new ArrayList<>();
-        this.baseFaits = null;
     }
 
     public Premisse(Element element) {
         this.elements = new ArrayList<>();
         this.elements.add(element);
-        this.baseFaits = null;
-    }
-
-    public Premisse(ArrayList<Element> elements, BaseFaits baseFaits) {
-        this.elements = elements;
-        this.baseFaits = baseFaits;
     }
 
     public boolean contient(Element e) {
@@ -44,10 +36,6 @@ public class Premisse implements Iterable<Element> {
 
     public void ajouterElement(Element element) {
         this.elements.add(element);
-    }
-
-    public boolean premisseValide() {
-        return true;
     }
 
     public ArrayList<Element> getElements() {

@@ -7,11 +7,9 @@ import java.util.*;
 
 public class BaseRegles implements Iterable<Regle>, Cloneable {
 
-    private List<Regle> regles;
-
-    private BaseConnaissances BC = null;
-
     public boolean groupementParPaquet = false;
+    private List<Regle> regles;
+    private BaseConnaissances BC = null;
 
     public BaseRegles() {
         this.regles = new ArrayList<>();
@@ -46,13 +44,9 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
         regles.remove(regle);
     }
 
-    public void creerRegle(){
-
-    }
-
     @Override
     public Iterator<Regle> iterator() {
-        if ( this.BC == null ) {
+        if (this.BC == null) {
             return regles.iterator();
         } else {
             switch (this.BC.choixRegle) {
@@ -60,18 +54,13 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
                     return new IterateurPlusDePremisses(this.regles);
                 }
                 case FAIT_RECENT -> {
-                    return new IterateurFaitRecent(this.regles,this.BC.getBaseFaits());
+                    return new IterateurFaitRecent(this.regles, this.BC.getBaseFaits());
                 }
                 default -> {
                     return regles.iterator();
                 }
             }
         }
-    }
-
-    public BaseRegles ajouterRegle(Premisse antecedent, Consequent consequent){
-        regles.add(new Regle(this, antecedent, consequent, "R?"));
-        return this;
     }
 
     public int tailleBr() {
@@ -130,7 +119,7 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
 
     public List<BaseRegles> getBrParPaquet() {
 
-        if ( this.BC != null && !this.groupementParPaquet ) {
+        if (this.BC != null && !this.groupementParPaquet) {
             return List.of(this);
         }
 
@@ -193,7 +182,7 @@ public class BaseRegles implements Iterable<Regle>, Cloneable {
     public boolean isPaquetUsed() {
         boolean paquetUsed = false;
         for (Regle regle : this.regles) {
-            if ( regle.getPaquet() != null & !regle.getPaquet().contains("?") ) {
+            if (regle.getPaquet() != null & !regle.getPaquet().contains("?")) {
                 paquetUsed = true;
             }
         }
