@@ -107,7 +107,7 @@ public class MoteurInference {
         }
     }
 
-    public Boolean chainageArriere(Premisse b) throws CloneNotSupportedException {
+    public Boolean chainageArriere(Consequent b) throws CloneNotSupportedException {
         BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
         BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
         Iterator<Regle> iterateurBR = BR.iterator();
@@ -115,53 +115,37 @@ public class MoteurInference {
         ArrayList<Boolean> results = new ArrayList<>();
         this.explications.clear();
         System.out.println("On recherche si la prémisse " + b + " est demandable\n");
-        boolean demandable = true;
-        while (iterateurPremisse.hasNext() && demandable) {
-            Element e = iterateurPremisse.next();
-            if (!chainageArriereRecursif(e, BR, BF, 0)) {
-                demandable = false;
-            }
-
-        }
-        return demandable;
+        return chainageArriereRecursif(b, BR, BF, 0);
     }
 
-    public boolean chainageArriereRecursif(Element b, BaseRegles BR, BaseFaits BF, int nbIteration) throws CloneNotSupportedException {
+    public boolean chainageArriereRecursif(Consequent b, BaseRegles BR, BaseFaits BF, int nbIteration) throws CloneNotSupportedException {
         nbIteration++;
         Iterator<Regle> iterateurBR = BR.iterator();
-        if (BF.contient(b)) {
+        //cas 1
+        if (BF.contient(b.getElements())) {
             return true;
         }
-        //Deuxième cas : si b est demandable avec une règle
         while (iterateurBR.hasNext()) {
             //On regarde regle par regle
             Regle r = iterateurBR.next();
-            //Si le consequent de r contient b, on regarde si l'antecedent est dans la BF. Si oui b est demandable sinon on cherche les antécédents de r
-            if (r.getConsequent().contient(b)) {
-                //Si la BF contient tous les antécédents
+            //Si le consequent de r contient tous les elements de b, on regarde si l'antecedent est dans la BF. Si oui b est demandable sinon on cherche les antécédents de r
+            if (r.getConsequent().contient(b.getElements())) {
+                //Si la BF contient tous les antécédents, cas 2
                 if (BF.contient(r.getAntecedants())) {
                     this.explications.add(new Explication(nbIteration, r));
                     return true;
                 }
-                //Si la BF ne contient pas tous les antécédents, on les cherche
+                //Si la BF ne contient pas tous les antécédents, on les cherche, cas 3
                 else {
                     this.explications.add(new Explication(nbIteration, r));
                     ArrayList<Boolean> antecedentsDemandable = new ArrayList<>();
                     //On recherche si les antecedents de la regle sont demandables
-                    for (Element e : r.getAntecedants()) {
-                        antecedentsDemandable.add(chainageArriereRecursif(e, BR, BF, nbIteration));
-                    }
-                    //On verifie si tous les antecedents de la regle sont demandables
-                    boolean allTrue = true;
-                    for (Boolean result : antecedentsDemandable) {
-                        if (!result) {
-                            allTrue = false;
-                            break;
+                    for (Element elem : r.getAntecedants()) {
+                        if (!chainageArriereRecursif(new Consequent(elem), BR, BF, nbIteration)) {
+                            return false;
                         }
                     }
-                    if (allTrue) {
-                        return true;
-                    }
+                    return true;
                 }
             }
         }

@@ -1,8 +1,10 @@
 package com.example.modele;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-public class Premisse implements Iterable<Element>{
+public class Premisse implements Iterable<Element> {
     private List<Element> elements;
     private BaseFaits baseFaits;
 
@@ -17,25 +19,34 @@ public class Premisse implements Iterable<Element>{
         this.baseFaits = null;
     }
 
-    public Premisse(ArrayList<Element> elements, BaseFaits baseFaits){
+    public Premisse(ArrayList<Element> elements, BaseFaits baseFaits) {
         this.elements = elements;
         this.baseFaits = baseFaits;
     }
 
-    public boolean contient(Element e){
-        for(Element elem :elements){
-            if(elem.equals(e)){
+    public boolean contient(Element e) {
+        for (Element elem : elements) {
+            if (elem.equals(e)) {
                 return true;
             }
         }
         return false;
     }
 
-    public void ajouterElement(Element element){
+    public boolean contient(ArrayList<Element> elements) {
+        for (Element elem : elements) {
+            if (!contient(elem)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void ajouterElement(Element element) {
         this.elements.add(element);
     }
 
-    public boolean premisseValide(){
+    public boolean premisseValide() {
         return true;
     }
 
@@ -50,7 +61,7 @@ public class Premisse implements Iterable<Element>{
             stringBuilder.append(element.toString());
             stringBuilder.append(",");
         }
-        stringBuilder.deleteCharAt(stringBuilder.length()-1);
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         return stringBuilder.toString();
     }
 

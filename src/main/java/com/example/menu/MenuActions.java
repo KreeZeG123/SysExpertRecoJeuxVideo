@@ -2,23 +2,22 @@ package com.example.menu;
 
 import com.example.modele.*;
 
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MenuActions {
 
     private static MenuActions instance;
 
+    private MenuActions() {
+    }
+
     public static MenuActions getInstance() {
-        if ( MenuActions.instance == null ) {
+        if (MenuActions.instance == null) {
             return new MenuActions();
         } else {
             return MenuActions.instance;
         }
     }
-
-    private MenuActions() {}
 
     public void display() {
         Scanner scanner = new Scanner(System.in);
@@ -50,19 +49,19 @@ public class MenuActions {
                 case 2:
                     System.out.println("Exécution du chainage arrière...\n");
                     try {
-                        Premisse b = new Premisse(new Element("Francais", new Valeur("true"), false));
-                        b.ajouterElement(new Element("Cool", new Valeur("false"), false));
+                        Consequent b = new Consequent(new Element("Neerlandais", new Valeur("true"), false));
+
                         boolean result = moteurInference.chainageArriere(b);
                         moteurInference.afficherTrace(moteurInference.getNivExplication());
                         System.out.println("\n---- Resultat ----");
-                        if(result){
-                            System.out.println("La prémisse " + b +" est demandable");
-                        }else{
-                            System.out.println("La prémisse " + b +" n'est pas demandable");
+                        if (result) {
+                            System.out.println("La prémisse " + b + " est demandable");
+                        } else {
+                            System.out.println("La prémisse " + b + " n'est pas demandable");
                         }
                     } catch (CloneNotSupportedException e) {
                         throw new RuntimeException(e);
-                }
+                    }
                     break;
                 case 3:
                     return;

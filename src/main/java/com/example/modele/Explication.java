@@ -1,6 +1,7 @@
 package com.example.modele;
 
-public class Explication {
+public class
+Explication {
 
     private final int numInference;
 

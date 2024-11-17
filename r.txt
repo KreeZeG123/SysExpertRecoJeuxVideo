@@ -1,5 +1,5 @@
 Slave(true), Dynamique(true) -> Adaptabilite(true)
-Slave(true) -> FaciliteLangue(true)
+FaciliteLangue(true) -> Polyglotte(true)
 Responsabilite(true) -> Leadership(true)
 FaciliteLangue(true) -> Netherland(true)
 Netherland(true) -> Neerlandais(true)
