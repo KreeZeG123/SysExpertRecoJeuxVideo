@@ -97,4 +97,8 @@ public class Coherence {
             }
         }
     }
+
+    public HashSet<String> getAttributsMono() {
+        return attributsMono;
+    }
 }

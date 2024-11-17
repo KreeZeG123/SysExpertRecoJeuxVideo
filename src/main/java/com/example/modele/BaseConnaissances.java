@@ -36,4 +36,19 @@ public class BaseConnaissances {
     public Coherence getCoherence() {
         return coherence;
     }
+
+    public boolean verifierCoherenceFaitMonoValue() {
+        HashMap<String, Integer> occurencesAttributs = this.getBaseFaits().listerOccurencesAttributs();
+        boolean incoherence = false;
+        for (String attribut : this.getCoherence().getAttributsMono() ) {
+            if (occurencesAttributs.containsKey(attribut)) {
+                Integer occurences = occurencesAttributs.get(attribut);
+                if ( occurences > 1) {
+                    System.out.println("Attention : L'attribut monovalué \""+attribut+"\" a plusieurs valeurs en meme temps");
+                    incoherence = true;
+                }
+            }
+        }
+        return incoherence;
+    }
 }

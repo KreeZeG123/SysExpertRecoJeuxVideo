@@ -1,4 +1,4 @@
-Slave(true), Dynamique(true) -> Adaptabilite(true)
+Slave(true), Dynamique(true) -> Adaptabilite(true), A(v)
 Slave(true), Valeur(<=4) -> FaciliteLangue(true)
 Responsabilite(true) -> Leadership(true)
 FaciliteLangue(true) -> Netherland(true)

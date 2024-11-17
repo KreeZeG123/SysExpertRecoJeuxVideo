@@ -96,4 +96,14 @@ public class BaseFaits implements Cloneable, Iterable<Fait> {
         }
         return null;
     }
+
+    public HashMap<String, Integer> listerOccurencesAttributs() {
+        HashMap<String, Integer> occurencesAttributs = new HashMap<>();
+        for (Fait fait : faits) {
+            int oldValue = occurencesAttributs.getOrDefault(fait.getMot(), 0);
+            occurencesAttributs.put(fait.getMot(),oldValue + 1);
+        }
+        return occurencesAttributs;
+    }
+
 }

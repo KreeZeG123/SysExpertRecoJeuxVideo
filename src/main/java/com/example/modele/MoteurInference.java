@@ -26,6 +26,22 @@ public class MoteurInference {
         BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
         BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
 
+        // Vérification des incohérences crée par les règles de monovaluation sur la base de fait
+        if ( this.BC.verifierCoherenceFaitMonoValue() ) {
+            System.out.println("\nUne ou plusieurs incohérences on été détectées dans la base fait !");
+            System.out.print("Souhaitez vous continuez l'inférence (oui/non) : ");
+
+            Scanner scanner = new Scanner(System.in);
+            if (scanner.nextLine().contains("non")) {
+                stop = true;
+                System.out.println("\nL'inférence a été arrêté, voici la base de connaissance lors de l'arrêt :\n");
+            }
+            else {
+                System.out.println();
+            }
+        }
+
+
         // Parcourt des différents groupes de règles
         List<BaseRegles> BRparPaquet = BR.getBrParPaquet();
         for (int indicePaquet = 0; indicePaquet < BRparPaquet.size() && !stop; indicePaquet++) {
@@ -79,7 +95,7 @@ public class MoteurInference {
                             if (scanner.nextLine().contains("non")) {
                                 inf = false;
                                 stop = true;
-                                System.out.println("\nL'inférence a été arrêté, voici la base de connaisance lors de l'arrêt :\n");
+                                System.out.println("\nL'inférence a été arrêté, voici la base de connaissance lors de l'arrêt :\n");
                                 break;
                             } else {
                                 System.out.println();
