@@ -2,7 +2,7 @@ package com.example.modele;
 
 import java.util.Objects;
 
-public class Valeur implements InterfaceValeur {
+public class Valeur {
 
     private final String valeur;
 

@@ -27,11 +27,10 @@ public class MenuActions {
             System.out.println("3 - Retour au menu principal");
             System.out.print("Choisissez une option : ");
 
-            int choix = scanner.nextInt();
-            scanner.nextLine();
+            String choix = scanner.nextLine();
             MoteurInference moteurInference = MenuLancement.getInstance().getMoteurInference();
             switch (choix) {
-                case 1:
+                case "1":
                     System.out.println("\nExécution du chainage avant ...\n");
                     try {
                         BaseFaits result = moteurInference.chainageAvant();
@@ -44,7 +43,7 @@ public class MenuActions {
                     }
 
                     break;
-                case 2:
+                case "2":
 
                     try {
                         // Demander à l'utilisateur d'entrer le but à déduire
@@ -75,7 +74,7 @@ public class MenuActions {
 
 
                     break;
-                case 3:
+                case "3":
                     return;
                 default:
                     System.out.println("Choix invalide, veuillez réessayer.");

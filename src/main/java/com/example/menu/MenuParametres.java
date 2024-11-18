@@ -29,11 +29,10 @@ public class MenuParametres {
             System.out.println("4 - Retour au menu principal");
             System.out.print("Choisissez une option : ");
 
-            int choix = scanner.nextInt();
-            scanner.nextLine();
+            String choix = scanner.nextLine();
 
             switch (choix) {
-                case 1:
+                case "1":
                     BaseConnaissances BC = MenuLancement.getInstance().getMoteurInference().getBC();
                     if (!optionsSelecionnee) {
                         BC.getBaseRegles().groupementParPaquet = true;
@@ -44,13 +43,13 @@ public class MenuParametres {
                     }
                     selectionnerOptions();
                     break;
-                case 2:
+                case "2":
                     MenuSelectionRegles.getInstance().display();
                     break;
-                case 3:
+                case "3":
                     MenuExplications.getInstance().display();
                     break;
-                case 4:
+                case "4":
                     return;
                 default:
                     System.out.println("Choix invalide, veuillez réessayer.");

@@ -28,21 +28,20 @@ public class MenuSelectionRegles {
             System.out.println("3 - Retour au menu des paramètres");
             System.out.print("Choisissez une option : ");
 
-            int choix = scanner.nextInt();
-            scanner.nextLine();
+            String choix = scanner.nextLine();
 
             switch (choix) {
-                case 1:
+                case "1":
                     System.out.println("Critère sélectionné : règle ayant le plus de prémisses à satisfaire.");
                     MenuLancement.getInstance().getMoteurInference().getBC().choixRegle = ChoixRegle.PLUS_DE_PREMISSES;
                     selectionnerOptions(1);
                     break;
-                case 2:
+                case "2":
                     System.out.println("Critère sélectionné : règle avec prémisses les faits déduits récents.");
                     MenuLancement.getInstance().getMoteurInference().getBC().choixRegle = ChoixRegle.FAIT_RECENT;
                     selectionnerOptions(2);
                     break;
-                case 3:
+                case "3":
                     return;
                 default:
                     System.out.println("Choix invalide, veuillez réessayer.");

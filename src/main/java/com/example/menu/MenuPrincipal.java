@@ -33,17 +33,16 @@ public class MenuPrincipal {
             System.out.println("3 - Quitter");
             System.out.print("Choisissez une option : ");
 
-            int choix = scanner.nextInt();
-            scanner.nextLine();
+            String choix = scanner.nextLine();
 
             switch (choix) {
-                case 1:
+                case "1":
                     MenuActions.getInstance().display();
                     break;
-                case 2:
+                case "2":
                     MenuParametres.getInstance().display();
                     break;
-                case 3:
+                case "3":
                     System.out.println("Fermeture du système expert. Au revoir !");
                     return;
                 default:

@@ -148,7 +148,7 @@ public class MoteurInference {
         BaseRegles BR = (BaseRegles) this.BC.getBaseRegles().clone();
         BaseFaits BF = (BaseFaits) this.BC.getBaseFaits().clone();
         this.explications.clear();
-        System.out.println("On recherche si la prémisse " + b + " est demandable\n");
+        System.out.println("On recherche si le consequent " + b + " est demandable\n");
         return chainageArriereRecursif(b, BR, BF, 0);
     }
 
