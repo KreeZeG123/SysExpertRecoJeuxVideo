@@ -27,26 +27,25 @@ public class MenuExplications {
             System.out.println("4 - Retour au menu des paramètres");
             System.out.print("Choisissez une option : ");
 
-            int choix = scanner.nextInt();
-            scanner.nextLine();
+            String choix = scanner.nextLine();
 
             switch (choix) {
-                case 1:
+                case "1":
                     System.out.println("\nExplication sélectionnée : Aucune explication");
                     MenuLancement.getInstance().getMoteurInference().setNivExplication(0);
                     selectionnerOptions(1);
                     break;
-                case 2:
+                case "2":
                     System.out.println("\nExplication sélectionnée : Sous forme de traces complètes.");
                     MenuLancement.getInstance().getMoteurInference().setNivExplication(1);
                     selectionnerOptions(3);
                     break;
-                case 3:
+                case "3":
                     System.out.println("\nExplication sélectionnée : Sous forme de traces abrégées.");
                     MenuLancement.getInstance().getMoteurInference().setNivExplication(2);
                     selectionnerOptions(4);
                     break;
-                case 4:
+                case "4":
                     return;
                 default:
                     System.out.println("Choix invalide, veuillez réessayer.");

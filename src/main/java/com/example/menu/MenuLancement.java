@@ -60,6 +60,7 @@ public class MenuLancement {
 
                         SourceScanner.detecterMotsSimilaires(BC);
                         SourceScanner.detecterValeursSimilaires(BC);
+                        System.out.println();
 
                         System.out.println("---- Base Règles Initiale ----");
                         boolean paquetUtilise = BC.getBaseRegles().isPaquetUsed();
